@@ -8,7 +8,7 @@ const CreateStudent = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        phone: '',
+        mobile: '',
     });
 
     const handleFileChange = (event) => {
@@ -37,10 +37,23 @@ const CreateStudent = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Handle form submission logic here
-        console.log('Form Data:', formData);
+        try {
+            const response = await fetch(`http://localhost:3001/form-submit`,{
+                method : "POST",
+                headers : {
+                    'Content-Type' : "application/json",
+                },
+                body : JSON.stringify(formData),
+            })
+            console.log(response);
+            console.log('Form Data:', formData);
+        } catch (error) {
+            console.log("",error);
+        }
+
     };
 
     return (
@@ -82,12 +95,12 @@ const CreateStudent = () => {
                                 />
                             </div>
                             <div className='mb-4'>
-                                <label htmlFor='phone' className='block text-gray-700 mb-2'>Phone Number</label>
+                                <label htmlFor='mobile' className='block text-gray-700 mb-2'>Mobile Number</label>
                                 <input
                                     type='tel'
-                                    name='phone'
-                                    id='phone'
-                                    value={formData.phone}
+                                    name='mobile'
+                                    id='mobile'
+                                    value={formData.mobile}
                                     onChange={handleChange}
                                     className='w-full p-2 border rounded'
                                     required

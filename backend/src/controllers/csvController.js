@@ -1,7 +1,7 @@
 import csvtojson from "csvtojson";
-import { Admin } from "../models/admin.model.js";
+import { Student } from "../models/student.model.js";
 
-const importUser = async (req, res) => {
+const importUserCsv = async (req, res) => {
     try {
         const userData = [];
 
@@ -13,12 +13,13 @@ const importUser = async (req, res) => {
             userData.push({
                 name: user.name,
                 email: user.email,
+                password : user.password,
                 mobile: user.mobile, // Ensure the CSV headers match these keys
             });
         });
 
         // Insert user data into the database
-        await Admin.insertMany(userData);
+        await Student.insertMany(userData);
 
         res.send({ status: 200, success: true, msg: "CSV IMPORTED" });
     } catch (error) {
@@ -26,4 +27,4 @@ const importUser = async (req, res) => {
     }
 };
 
-export default importUser;
+export default importUserCsv;
