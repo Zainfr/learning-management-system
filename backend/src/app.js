@@ -1,12 +1,22 @@
 import express from "express"
 import userRoute from './routes/userRoute.js';
+import cors from "cors"
 
 const app = express();
 
-app.use('/',userRoute)
+// CORS middleware
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+}
+app.use(cors(corsOptions));
 
-app.listen(5000,function(){
-    console.log(`App is running on ${process.env.PORT}`)
-})
+// Express JSON middleware
+app.use(express.json());
+
+// Routes
+app.use('/', userRoute);
+
 
 export default app;
