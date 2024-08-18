@@ -4,8 +4,8 @@ const Login = () => {
     const [role, setRole] = useState('');
 
     return (
-        <div className='flex justify-center items-center h-screen bg-gray-100'>
-            <div className='p-8 bg-white shadow-md rounded-lg'>
+        <div className='flex justify-center items-center h-screen bg-gray-100' >
+            <div className='p-8 flex flex-col bg-white shadow-md rounded-lg w-[600px] h-auto'>
                 <h2 className='text-2xl font-bold mb-4'>Login</h2>
                 <form>
                     <select

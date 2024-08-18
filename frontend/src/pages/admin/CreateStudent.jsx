@@ -9,24 +9,15 @@ const CreateStudent = () => {
         email: '',
         password: '',
         mobile: '',
+        name: '',
     });
 
+    const [file, setFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [message, setMessage] = useState('');
+
     const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            Papa.parse(file, {
-                header: true, // Set to false if CSV doesn't have headers
-                dynamicTyping: true,
-                complete: (result) => {
-                    setData(result.data);
-                    setError(null);
-                    // Handle CSV data here
-                },
-                error: (error) => {
-                    setError(error.message);
-                },
-            });
-        }
+        setFile(event.target.files[0]);
     };
 
     const handleChange = (e) => {
@@ -37,21 +28,53 @@ const CreateStudent = () => {
         });
     };
 
+    const handleCSVSubmit = async (event) => {
+        event.preventDefault();
+        if (!file) {
+            setMessage('Please select a file to upload.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        setUploading(true);
+        setMessage('');
+
+        try {
+            const response = await fetch('http://localhost:3001/api/import-csv', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                setMessage(data.msg || 'File uploaded successfully!');
+            } else {
+                setMessage(data.msg || 'File upload failed.');
+            }
+        } catch (error) {
+            setMessage('An error occurred during file upload.');
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Handle form submission logic here
         try {
-            const response = await fetch(`http://localhost:3001/form-submit`,{
-                method : "POST",
-                headers : {
-                    'Content-Type' : "application/json",
+            const response = await fetch(`http://localhost:3001/form-submit`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/json",
                 },
-                body : JSON.stringify(formData),
+                body: JSON.stringify(formData),
             })
             console.log(response);
             console.log('Form Data:', formData);
         } catch (error) {
-            console.log("",error);
+            console.log("", error);
         }
 
     };
@@ -70,6 +93,18 @@ const CreateStudent = () => {
                 <div className='flex justify-center items-center h-screen pt-24 bg-gray-300'>
                     <div className='bg-white p-6 rounded-lg shadow-md w-full max-w-lg'>
                         <form onSubmit={handleSubmit}>
+                            <div className='mb-4'>
+                                <label htmlFor='name' className='block text-gray-700 mb-2'>Name</label>
+                                <input
+                                    type='text'
+                                    name='name'
+                                    id='name'
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className='w-full p-2 border rounded'
+                                    required
+                                />
+                            </div>
                             <div className='mb-4'>
                                 <label htmlFor='email' className='block text-gray-700 mb-2'>Email</label>
                                 <input
@@ -111,14 +146,26 @@ const CreateStudent = () => {
                             </button>
                         </form>
 
-                        <div className='flex flex-col items-center'>
-                            <input
-                                type="file"
-                                accept=".csv"
-                                onChange={handleFileChange}
-                                className='mb-4'
-                            />
-                            {error && <p className='text-red-600 mt-4'>{error}</p>}
+                        <div className='p-6'>
+                            <h1 className='text-2xl font-semibold mb-4'>Upload CSV</h1>
+                            <form onSubmit={handleCSVSubmit} encType='multipart/form-data'>
+                                <div className='mb-4'>
+                                    <input
+                                        type='file'
+                                        accept='.csv'
+                                        onChange={handleFileChange}
+                                        className='border border-gray-300 rounded p-2'
+                                    />
+                                </div>
+                                <button
+                                    type='submit'
+                                    disabled={uploading}
+                                    className='bg-blue-500 text-white p-2 rounded disabled:opacity-50'
+                                >
+                                    {uploading ? 'Uploading...' : 'Upload CSV'}
+                                </button>
+                            </form>
+                            {message && <p className='mt-4 text-gray-700'>{message}</p>}
                         </div>
                     </div>
                 </div>
