@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import { DB_NAME } from "../constants/constants.js"
-
+import {createSemester} from "../middlewares/semOperations.js"
 const connectDB = async () => {
     try{
         const connection = await mongoose.connect(
@@ -12,5 +12,7 @@ const connectDB = async () => {
         process.exit(1)
     }
 }
+
+createSemester();
 
 export default connectDB

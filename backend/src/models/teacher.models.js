@@ -26,10 +26,7 @@ const teacherSchema = new mongoose.Schema(
             unique: true
         }
 
-    }, 
-    
-    {timestamps: true}
-)
+    },{timestamps: true});
 
 teacherSchema.pre("save", async function(next) {
 
