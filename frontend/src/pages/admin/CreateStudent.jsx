@@ -42,7 +42,7 @@ const CreateStudent = () => {
         setMessage('');
 
         try {
-            const response = await fetch('http://localhost:3001/api/import-csv', {
+            const response = await fetch('http://localhost:3001/importUser', {
                 method: 'POST',
                 body: formData,
             });
