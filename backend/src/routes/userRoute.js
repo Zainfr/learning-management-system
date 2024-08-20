@@ -4,6 +4,8 @@ import path from "path";
 import importUserCsv from "../controllers/csvController.js"; // Import the correct controller function
 import importUserForm from "../controllers/formController.js";
 
+import { updateStudentByRollno, deleteStudentByRollno } from '../controllers/studentController.js';
+
 const router = express.Router();
 
 //router.use(bodyParser.urlencoded({ extended: true }));
@@ -24,5 +26,10 @@ router.post('/importUser', upload.single('file'), importUserCsv); //Handles CSV
 
 router.post('/form-submit',importUserForm);                       //Handles Form Submission
 
+// Update student route
+router.put('/students/:rollno', updateStudentByRollno);
+
+// Delete student route
+router.delete('/students/:rollno', deleteStudentByRollno);
 
 export default router;
