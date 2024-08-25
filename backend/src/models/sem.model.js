@@ -9,7 +9,7 @@ const semesterSchema = new mongoose.Schema({
     },
     subjects: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref : "Subjects",
+        ref : "Subject",
         required: true,
     }],
 }, {timestamps: true});
