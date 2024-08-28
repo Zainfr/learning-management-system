@@ -3,7 +3,6 @@ import userRoute from './routes/userRoute.js';
 import cors from "cors"
 import { Student } from "./models/student.model.js";
 import { Teacher } from "./models/teacher.models.js";
-import { Course } from "./models/course.model.js"
 
 const app = express();
 
