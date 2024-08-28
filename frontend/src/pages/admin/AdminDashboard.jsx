@@ -36,12 +36,14 @@ const AdminDashboard = () => {
 
     return (
         <div className='flex'>
-            <SideBar />
+            <div className='w-64'>
+                <SideBar />
+            </div>
             <div className='flex-grow'>
-                <div className='ml-64 p-6 border-solid border-b-2 border-gray-200'>
+                <div className='p-6 border-solid border-b-2 border-gray-200'>
                     <h1 className='text-3xl text-gray-700 font-semibold'>Admin Dashboard</h1>
                 </div>
-                <div className='flex justify-center h-screen pt-24 bg-gray-300'>
+                <div className='flex justify-center h-[90vh] pt-24 bg-gray-300'>
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-6xl h-fit'>
                         {/* Number of Students */}
                         <div className='bg-white p-6 rounded-lg shadow-lg flex flex-col items-center'>

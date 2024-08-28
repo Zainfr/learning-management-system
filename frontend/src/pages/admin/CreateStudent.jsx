@@ -42,7 +42,7 @@ const CreateStudent = () => {
         setMessage('');
 
         try {
-            const response = await fetch('http://localhost:3001/api/import-csv', {
+            const response = await fetch('http://localhost:3001/importUser', {
                 method: 'POST',
                 body: formData,
             });
@@ -82,16 +82,19 @@ const CreateStudent = () => {
     return (
         <div className='flex'>
             {/* Fixed Sidebar */}
-            <SideBar />
-            <div className='flex-grow'>
+            <div className='fixed h-screen w-64'>
+                <SideBar />
+            </div>
+
+            <div className='flex-grow md:ml-64'>
                 {/* Fixed Header */}
-                <div className='fixed top-0 left-[256px] right-0 bg-white shadow-md p-6 z-20'>
+                <div className='fixed top-0 left-0 md:left-[256px] right-0 bg-white shadow-md p-6 z-20'>
                     <h1 className='text-3xl text-gray-700 font-semibold'>Create Student</h1>
                 </div>
 
                 {/* Form and CSV Upload centered */}
-                <div className='flex justify-center items-center h-screen pt-24 bg-gray-300'>
-                    <div className='bg-white p-6 rounded-lg shadow-md w-full max-w-lg'>
+                <div className='flex justify-center items-center h-full pt-24 bg-gray-300'>
+                    <div className='bg-white p-6 rounded-lg shadow-md mt-5 mb-5'>
                         <form onSubmit={handleSubmit}>
                             <div className='mb-4'>
                                 <label htmlFor='name' className='block text-gray-700 mb-2'>Name</label>
