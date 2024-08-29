@@ -114,14 +114,15 @@ const CreateStudent = () => {
     return (
         <div className='flex'>
             {/* Fixed Sidebar */}
-            <div className='fixed h-screen w-64'>
+            <div className=' fixed z-10 h-screen w-64 md:block'>
                 <SideBar />
             </div>
 
             <div className='flex-grow md:ml-64'>
+
                 {/* Fixed Header */}
-                <div className='fixed top-0 left-0 md:left-[256px] right-0 bg-white shadow-md p-6 z-20'>
-                    <h1 className='text-3xl text-gray-700 font-semibold'>Create Student</h1>
+                <div className='fixed top-0 left-0 md:left-[256px] right-0 bg-white shadow-md p-6 z-0'>
+                    <h1 className='text-3xl text-gray-700 font-semibold pl-8'>Create Student</h1>
                 </div>
 
                 {/* Form and CSV Upload centered */}

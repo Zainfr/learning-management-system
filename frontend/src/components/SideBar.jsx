@@ -13,7 +13,7 @@ const SideBar = () => {
     return (
         <>
             {/* Mobile Menu Button */}
-            <div className='md:hidden flex justify-between items-center p-4 text-white'>
+            <div className='md:hidden flex justify-between items-center p-4 pb-[28px] -mt-[80px] text-black'>
                 <button onClick={() => setIsOpen(!isOpen)} className='mt-24'>
                     <FaBars size={24} />
                 </button>
