@@ -1,16 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SideBar from '../../components/SideBar';
-import Papa from 'papaparse';
 
 const CreateStudent = () => {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
+    const [semesters, setSemesters] = useState([]);
     const [formData, setFormData] = useState({
+        name: '',
+        rollno: '',
+        mobile: '',
+        sem: '',
+        mentor: '',
         email: '',
         password: '',
-        mobile: '',
-        name: '',
     });
+
+    useEffect(() => {
+        const fetchSemesters = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/api/semesters');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setSemesters(data);
+                } else {
+                    throw new Error('Unexpected response format');
+                }
+            } catch (error) {
+                console.error('Error fetching semesters:', error);
+                setError('Failed to fetch semesters. Please try again later.');
+            }
+        };
+
+        fetchSemesters();
+    }, []);
 
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
@@ -35,8 +60,8 @@ const CreateStudent = () => {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('file', file);
+        const formDataForUpload = new FormData();
+        formDataForUpload.append('file', file);
 
         setUploading(true);
         setMessage('');
@@ -44,7 +69,7 @@ const CreateStudent = () => {
         try {
             const response = await fetch('http://localhost:3001/importUser', {
                 method: 'POST',
-                body: formData,
+                body: formDataForUpload,
             });
 
             const data = await response.json();
@@ -62,21 +87,28 @@ const CreateStudent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission logic here
+        console.log(formData);
         try {
-            const response = await fetch(`http://localhost:3001/form-submit`, {
+            const response = await fetch('http://localhost:3001/form-submit', {
                 method: "POST",
                 headers: {
                     'Content-Type': "application/json",
                 },
                 body: JSON.stringify(formData),
-            })
-            console.log(response);
-            console.log('Form Data:', formData);
-        } catch (error) {
-            console.log("", error);
-        }
+            });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Response Data:', data);
+            console.log('Form Data:', formData);
+            setMessage('Student created successfully!');
+        } catch (error) {
+            console.error('Form submission error:', error);
+            setMessage('Failed to create student. Please try again.');
+        }
     };
 
     return (
@@ -109,6 +141,53 @@ const CreateStudent = () => {
                                 />
                             </div>
                             <div className='mb-4'>
+                                <label htmlFor='rollno' className='block text-gray-700 mb-2'>Roll No.</label>
+                                <input
+                                    type='text'
+                                    name='rollno'
+                                    id='rollno'
+                                    value={formData.rollno}
+                                    onChange={handleChange}
+                                    className='w-full p-2 border rounded'
+                                    required
+                                />
+                            </div>
+                            <div className='mb-4'>
+                                <label htmlFor='mobile' className='block text-gray-700 mb-2'>Mobile Number</label>
+                                <input
+                                    type='tel'
+                                    name='mobile'
+                                    id='mobile'
+                                    value={formData.mobile}
+                                    onChange={handleChange}
+                                    className='w-full p-2 border rounded'
+                                    required
+                                />
+                            </div>
+                            <div className='mb-4'>
+                                <label htmlFor='sem' className='block text-gray-700 mb-2'>Semester</label>
+                                <select name='sem' value={formData.sem} onChange={handleChange} required>
+                                    <option value=''>Select Semester</option>
+                                    {semesters.map((semester) => (
+                                        <option key={semester._id} value={semester._id}>
+                                            {semester.semester}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className='mb-4'>
+                                <label htmlFor='mentor' className='block text-gray-700 mb-2'>Mentor</label>
+                                <input
+                                    type='text'
+                                    name='mentor'
+                                    id='mentor'
+                                    value={formData.mentor}
+                                    onChange={handleChange}
+                                    className='w-full p-2 border rounded'
+                                    required
+                                />
+                            </div>
+                            <div className='mb-4'>
                                 <label htmlFor='email' className='block text-gray-700 mb-2'>Email</label>
                                 <input
                                     type='email'
@@ -132,21 +211,12 @@ const CreateStudent = () => {
                                     required
                                 />
                             </div>
-                            <div className='mb-4'>
-                                <label htmlFor='mobile' className='block text-gray-700 mb-2'>Mobile Number</label>
-                                <input
-                                    type='tel'
-                                    name='mobile'
-                                    id='mobile'
-                                    value={formData.mobile}
-                                    onChange={handleChange}
-                                    className='w-full p-2 border rounded'
-                                    required
-                                />
-                            </div>
+
                             <button type='submit' className='w-full p-2 bg-blue-600 text-white rounded mb-4'>
                                 Submit
                             </button>
+                            {error && <p className='text-red-500'>{error}</p>}
+                            {message && <p className='text-green-500'>{message}</p>}
                         </form>
 
                         <div className='p-6'>

@@ -2,13 +2,16 @@ import { Student } from "../models/student.model.js";
 
 const importUserForm = async (req, res) => {
   try {
-    const { email, password, mobile, name } = req.body;
+    const { name, rollno, mobile, sem, mentor, email, password } = req.body;
 
     const newUser = new Student({
+      name,
+      rollno,
+      mobile,
+      sem,
+      mentor,
       email,
       password,
-      mobile,
-      name, // You can remove this if you don't want to set a default name
     });
 
     await newUser.save();
