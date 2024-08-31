@@ -34,22 +34,16 @@ app.get('/api/semesters', async (req, res) => {
 
 //API endpoint for (to get sutdents)students
 app.get('/api/students', async (req, res) => {
-  //for paginatiuib
-  const { page = 1, limit = 10 } = req.query;
+
 
   try {
     //pura chat gpt ne kiya yeh meko kuch nahi malom kya hai
     const students = await Student.find()
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
 
     const count = await Student.countDocuments();
 
     res.json({
       students,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -92,15 +86,6 @@ app.get('/api/teachers/count', async (req, res) => {
   }
 });
 
-// API Endpoint to get the list of courses
-app.get('/api/courses', async (req, res) => {
-  try {
-    const courses = await Course.find({});
-    res.json(courses);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
 
 export default app;

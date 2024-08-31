@@ -15,7 +15,7 @@ const importUserCsv = async (req, res) => {
 
         for (const user of jsonArray) {
             const semester = semesterMap.get(Number(user.sem));
-            
+
             if (!semester) {
                 throw new Error(`Semester ${user.sem} not found in the database`);
             }
