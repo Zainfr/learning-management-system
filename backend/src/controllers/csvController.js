@@ -1,34 +1,8 @@
 import csvtojson from 'csvtojson';
-import fs from 'fs';
-import path from 'path';
 import { Student } from '../models/student.model.js';
 import { Semester } from '../models/sem.model.js';
-import { Subject } from '../models/subjects.model.js';
+import createStudentFolders from './folderController.js';
 
-// Function to create student folders
-const subjects = Subject;
-const createStudentFolders = (student, subjects) => {
-    const baseDir = path.join('.', 'public', 'uploads', student.rollno);
-    const assignmentDir = path.join(baseDir, 'assignments');
-    const materialsDir = path.join(baseDir, 'study-materials');
-
-    // Create base directory
-    fs.mkdirSync(baseDir, { recursive: true });
-    
-    // Create subject folders inside assignments
-    subjects.forEach(subject => {
-        fs.mkdirSync(path.join(assignmentDir, subject.name), { recursive: true });
-    });
-
-    // Create the study materials folder
-    fs.mkdirSync(materialsDir, { recursive: true });
-
-    // Return the paths (optional)
-    return {
-        assignmentFolderPath: assignmentDir,
-        studyMaterialsFolderPath: materialsDir,
-    };
-};
 
 // Function to handle CSV import and folder creation
 const importUserCsv = async (req, res) => {
@@ -41,7 +15,7 @@ const importUserCsv = async (req, res) => {
 
         for (const user of jsonArray) {
             const semester = semesterMap.get(Number(user.sem));
-            
+
             if (!semester) {
                 throw new Error(`Semester ${user.sem} not found in the database`);
             }

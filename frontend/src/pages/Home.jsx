@@ -8,9 +8,10 @@ const SideDesign = () => {
             <div className='text-center md:text-left md:mr-[55vh] md:ml-20'>
                 <img src={logo} alt='Logo' width={'120px'} className='mb-4 md:mb-7' />
                 <div>
-                    <h1 className='font-extrabold text-[2.5rem] md:text-[4rem] text-white'>Learning</h1>
-                    <h1 className='font-extrabold text-[2.5rem] md:text-[4rem] text-white'>Management</h1>
-                    <h1 className='font-extrabold text-[2.5rem] md:text-[4rem] text-white'>System</h1>
+                    <h1 className='font-extrabold text-[2.5rem] md:text-[4rem] text-white'>Edvantage.</h1>
+                    <h1 className='font-bold text-[1.5rem] md:text-[3rem] text-white'>Learning</h1>
+                    <h1 className='font-bold text-[1.5rem] md:text-[3rem] text-white'>Management</h1>
+                    <h1 className='font-bold text-[1.5rem] md:text-[3rem] text-white'>System</h1>
                 </div>
             </div>
         </div>
