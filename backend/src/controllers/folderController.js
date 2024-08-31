@@ -6,9 +6,6 @@ const createStudentFolders = (student, subjects) => {
     const baseDir = path.join('.', 'public', 'uploads', student.rollno);
     const assignmentDir = path.join(baseDir, 'assignments');
     
-    //Study-materials commented Out bcoz it will be Provided by the Teacher
-    //const materialsDir = path.join(baseDir, 'study-materials');
-
     // Create base directory
     fs.mkdirSync(baseDir, { recursive: true });
     
