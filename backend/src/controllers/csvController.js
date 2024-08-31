@@ -41,6 +41,7 @@ const importUserCsv = async (req, res) => {
         // Insert all student data into the database
         await Student.insertMany(userData);
         res.send({ status: 200, success: true, msg: 'CSV IMPORTED' });
+
     } catch (error) {
         res.status(400).send({ status: 400, success: false, msg: error.message });
     }

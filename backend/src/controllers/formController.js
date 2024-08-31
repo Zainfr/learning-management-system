@@ -1,8 +1,12 @@
 import { Student } from "../models/student.model.js";
+import { Semester } from '../models/sem.model.js';
+import createStudentFolders from "./folderController.js";
 
 const importUserForm = async (req, res) => {
   try {
     const { name, rollno, mobile, sem, mentor, email, password } = req.body;
+
+    const semester = await Semester.findById(sem).populate('subjects');
 
     const newUser = new Student({
       name,
@@ -13,8 +17,13 @@ const importUserForm = async (req, res) => {
       email,
       password,
     });
-
-    await newUser.save();
+    // DONT REMOVE THIS TRY CATCH OR THE WORLD WILL END
+    try {
+      await newUser.save();
+      createStudentFolders(newUser,semester.subjects);
+    } catch (error) {
+      console.error(error);
+    }
 
     res.status(200).json({ success: true, msg: "User created successfully" });
     console.log('Received form data:', req.body);
