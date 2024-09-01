@@ -4,7 +4,7 @@ import path from "path";
 import importUserCsv from "../controllers/csvController.js"; // Import the correct controller function
 import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
-import { updateStudentByRollno, deleteStudentByRollno } from '../controllers/studentController.js';
+import {importTeacherForm,importTeacherCsv} from "../controllers/teachers/teacherFormController.js";
 
 const router = express.Router();
 
@@ -35,11 +35,9 @@ router.get('/', async (req, res) => {
     }
 });
 
+//teacher Routing starts here
+router.post('/teacher-form-submit',importTeacherForm);
+router.post('/teacher-csv-submit',upload.single('file'),importTeacherCsv);
 
-// Update student route
-router.put('/students/:rollno', updateStudentByRollno);
-
-// Delete student route
-router.delete('/students/:rollno', deleteStudentByRollno);
 
 export default router;

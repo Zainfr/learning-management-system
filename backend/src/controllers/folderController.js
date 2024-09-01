@@ -1,7 +1,6 @@
 import fs from "fs"
 import path from "path"
 
-
 // Function to create student folders
 const createStudentFolders = (student, subjects) => {
     const baseDir = path.join('.', 'public', 'uploads', student.rollno);

@@ -6,10 +6,10 @@ const CreateTeacher = () => {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
+        teacher_name: '',
         email: '',
         password: '',
         mobile: '',
-        name: '',
     });
 
     const [file, setFile] = useState(null);
@@ -42,7 +42,7 @@ const CreateTeacher = () => {
         setMessage('');
 
         try {
-            const response = await fetch('http://localhost:3001/api/import-csv', {
+            const response = await fetch('http://localhost:3001/teacher-csv-submit', {
                 method: 'POST',
                 body: formData,
             });
@@ -64,7 +64,7 @@ const CreateTeacher = () => {
         e.preventDefault();
         // Handle form submission logic here
         try {
-            const response = await fetch(`http://localhost:3001/form-submit`, {
+            const response = await fetch(`http://localhost:3001/teacher-form-submit`, {
                 method: "POST",
                 headers: {
                     'Content-Type': "application/json",
@@ -100,9 +100,9 @@ const CreateTeacher = () => {
                                 <label htmlFor='name' className='block text-gray-700 mb-2'>Name</label>
                                 <input
                                     type='text'
-                                    name='name'
-                                    id='name'
-                                    value={formData.name}
+                                    name='teacher_name'
+                                    id='teacher_name'
+                                    value={formData.teacher_name}
                                     onChange={handleChange}
                                     className='w-full p-2 border rounded'
                                     required
