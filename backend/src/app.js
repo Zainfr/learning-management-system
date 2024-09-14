@@ -50,6 +50,21 @@ app.get('/api/students', async (req, res) => {
   }
 });
 
+//API endpoint to get teacher details
+app.get('/api/teachers', async (req, res) => {
+  try {
+    const teachers = await Teacher.find()
+
+    const count = await Teacher.countDocuments();
+
+    res.json({
+      teachers,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 //delete student by their object id
 app.delete('/api/students/:id', async (req, res) => {
   try {
@@ -61,6 +76,22 @@ app.delete('/api/students/:id', async (req, res) => {
 
     await student.deleteOne();
     res.json({ message: 'Student deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+//delete teacher by their object id
+app.delete('/api/teachers/:id', async (req, res) => {
+  try {
+    const teacher = await Teacher.findById(req.params.id);
+
+    if (!teacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
+
+    await teacher.deleteOne();
+    res.json({ message: 'Teacehr deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
