@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import SideBar from '../../components/SideBar';
+import MessageModal from '../../components/MessageModal';
 
 const CreateStudent = () => {
-    const [data, setData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [modalConent, setModalContent] = useState({
+        title: '',
+        message: '',
+        success: true,
+    })
+    const handleClose = () => setShowModal(false);
     const [error, setError] = useState(null);
     const [semesters, setSemesters] = useState([]);
     const [formData, setFormData] = useState({
@@ -98,7 +105,19 @@ const CreateStudent = () => {
             });
 
             if (!response.ok) {
+                setModalContent({
+                    title: 'Error',
+                    message: `Failed to create Student 😨 `,
+                    success: false
+                })
                 throw new Error(`HTTP error! Status: ${response.status}`);
+
+            } else {
+                setModalContent({
+                    title: "Success.",
+                    message: "Student created successfully 😁!!",
+                    success: true,
+                })
             }
 
             const data = await response.json();
@@ -106,9 +125,15 @@ const CreateStudent = () => {
             console.log('Form Data:', formData);
             setMessage('Student created successfully!');
         } catch (error) {
-            console.error('Form submission error:', error);
+            console.log('Form submission error:', error);
             setMessage('Failed to create student. Please try again.');
+            setModalContent({
+                title: 'Error',
+                message: `Failed to create Student 😨 ${error}`,
+                success: false
+            })
         }
+        setShowModal(true);
     };
 
     return (
@@ -219,7 +244,6 @@ const CreateStudent = () => {
                             {error && <p className='text-red-500'>{error}</p>}
                             {message && <p className='text-green-500'>{message}</p>}
                         </form>
-
                         <div className='p-6'>
                             <h1 className='text-2xl font-semibold mb-4'>Upload CSV</h1>
                             <form onSubmit={handleCSVSubmit} encType='multipart/form-data'>
@@ -241,6 +265,13 @@ const CreateStudent = () => {
                             </form>
                             {message && <p className='mt-4 text-gray-700'>{message}</p>}
                         </div>
+                        <MessageModal
+                            show={showModal}
+                            handleClose={handleClose}
+                            title={modalConent.title}
+                            message={modalConent.message}
+                            success={modalConent.success}
+                        />
                     </div>
                 </div>
             </div>

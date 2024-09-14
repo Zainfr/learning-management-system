@@ -20,7 +20,7 @@ const importUserForm = async (req, res) => {
     // DONT REMOVE THIS TRY CATCH OR THE WORLD WILL END
     try {
       await newUser.save();
-      createStudentFolders(newUser,semester.subjects);
+      createStudentFolders(newUser, semester.subjects);
     } catch (error) {
       console.error(error);
     }
@@ -30,9 +30,9 @@ const importUserForm = async (req, res) => {
   } catch (error) {
     if (error.code === 11000) {
       // This error code indicates a duplicate key error
-      res.status(400).json({ success: false, msg: "Email or mobile number already exists" });
+      res.status(400).json({ success: false, message: "Email or mobile number already exists" });
     } else {
-      res.status(400).json({ success: false, msg: error.message });
+      res.status(400).json({ success: false, message: error.message });
     }
   }
 };
