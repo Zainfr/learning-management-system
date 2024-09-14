@@ -27,8 +27,9 @@ const studentSchema = new mongoose.Schema({
         unique : false,
     },
     mentor: {
-        type : String,
-        required : true,
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Teacher",
+        requried : true,
         unique : false,
     },
     //testing ends here

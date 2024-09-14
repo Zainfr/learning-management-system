@@ -21,10 +21,10 @@ const teacherSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    // mentees : [{
-    //     type : mongoose.Schema.Types.ObjectId,
-    //     ref : "Student",
-    // }],
+    mentees : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Student",
+    }],
 },{timestamps: true});
 
 teacherSchema.pre("save", async function(next) {
