@@ -20,6 +20,16 @@ app.use(express.json());
 // Routes
 app.use('/', userRoute);
 
+// to get the Teacher id for frontend.
+app.get('/api/teachers',async(req,res) => {
+  try {
+    const teachers = await Teacher.find({});
+    res.json(teachers)
+  } catch (error) {
+    console.error('Error Fetching the Teachers : error');
+    res.status(500).json({message: ' Internal Server Error'});
+  }
+})
 
 // to get the semester id for frontend
 app.get('/api/semesters', async (req, res) => {
@@ -34,8 +44,6 @@ app.get('/api/semesters', async (req, res) => {
 
 //API endpoint for (to get sutdents)students
 app.get('/api/students', async (req, res) => {
-
-
   try {
     //pura chat gpt ne kiya yeh meko kuch nahi malom kya hai
     const students = await Student.find()

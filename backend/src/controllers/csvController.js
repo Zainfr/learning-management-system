@@ -1,6 +1,7 @@
 import csvtojson from 'csvtojson';
 import { Student } from '../models/student.model.js';
 import { Semester } from '../models/sem.model.js';
+import {Teacher} from '../models/teacher.models.js';
 import createStudentFolders from './folderController.js';
 
 
@@ -20,13 +21,17 @@ const importUserCsv = async (req, res) => {
                 throw new Error(`Semester ${user.sem} not found in the database`);
             }
 
+            const mentor = await Teacher.findOne({teacher_name : user.mentor});
+            if(!mentor){
+                throw new Error(`Teachers ${user.mentor} not found in the Database`);
+            }
             // Prepare the student data
             const newStudent = {
                 name: user.name,
                 rollno: user.rollno,
                 mobile: user.mobile,
                 sem: semester._id, // Use the ObjectId of the semester
-                mentor: user.mentor,
+                mentor: mentor._id,
                 email: user.email,
                 password: user.password,
             };

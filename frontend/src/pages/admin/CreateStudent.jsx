@@ -12,6 +12,7 @@ const CreateStudent = () => {
     const handleClose = () => setShowModal(false);
     const [error, setError] = useState(null);
     const [semesters, setSemesters] = useState([]);
+    const [teachers, setTeachers] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         rollno: '',
@@ -42,6 +43,26 @@ const CreateStudent = () => {
         };
 
         fetchSemesters();
+
+        const fetchTeachers = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/api/teachers');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setTeachers(data);
+                } else {
+                    throw new Error('Unexpected response format');
+                }
+            } catch (error) {
+                console.error('Error fetching Teachers:', error);
+                setError('Failed to fetch Teachers. Please try again later.');
+            }
+        }
+
+        fetchTeachers();
     }, []);
 
     const [file, setFile] = useState(null);
@@ -203,15 +224,14 @@ const CreateStudent = () => {
                             </div>
                             <div className='mb-4'>
                                 <label htmlFor='mentor' className='block text-gray-700 mb-2'>Mentor</label>
-                                <input
-                                    type='text'
-                                    name='mentor'
-                                    id='mentor'
-                                    value={formData.mentor}
-                                    onChange={handleChange}
-                                    className='w-full p-2 border rounded'
-                                    required
-                                />
+                                <select name="mentor" value={formData.mentor} onChange ={handleChange} required>
+                                    <option value="">Select Mentor</option>
+                                    {teachers.map((teacher) => (
+                                        <option key={teacher._id} value={teacher._id}>
+                                            {teacher.teacher_name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className='mb-4'>
                                 <label htmlFor='email' className='block text-gray-700 mb-2'>Email</label>
