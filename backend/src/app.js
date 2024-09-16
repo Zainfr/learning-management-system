@@ -52,6 +52,7 @@ app.get('/api/students', async (req, res) => {
 
     res.json({
       students,
+      count
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -62,9 +63,6 @@ app.get('/api/students', async (req, res) => {
 app.get('/api/teachers', async (req, res) => {
   try {
     const teachers = await Teacher.find()
-
-    const count = await Teacher.countDocuments();
-
     res.json({
       teachers,
     });
@@ -105,16 +103,8 @@ app.delete('/api/teachers/:id', async (req, res) => {
   }
 });
 
-// API Endpoint to get the number of students
-app.get('/api/students/count', async (req, res) => {
-  try {
-    const count = await Student.countDocuments({});
-    res.json({ count });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
+//Yeh mat hatao bhai pleaseeeeeeeeeeee 
 // API Endpoint to get the number of teachers
 app.get('/api/teachers/count', async (req, res) => {
   try {
@@ -124,7 +114,5 @@ app.get('/api/teachers/count', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 export default app;
