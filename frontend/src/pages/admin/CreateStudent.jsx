@@ -4,7 +4,6 @@ import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import MessageModal from "../../components/MessageModal";
-import { FileUpload } from "primereact/fileupload";
 
 const CreateStudent = () => {
   const [showModal, setShowModal] = useState(false);

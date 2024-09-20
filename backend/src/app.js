@@ -4,6 +4,7 @@ import cors from "cors"
 import { Student } from "./models/student.model.js";
 import { Teacher } from "./models/teacher.models.js";
 import { Semester } from "./models/sem.model.js";
+import { Course } from "./models/course.model.js";
 const app = express();
 
 // CORS middleware
@@ -59,6 +60,8 @@ app.get('/api/students', async (req, res) => {
   }
 });
 
+
+
 //API endpoint to get teacher details
 app.get('/api/teachers', async (req, res) => {
   try {
@@ -109,6 +112,16 @@ app.delete('/api/teachers/:id', async (req, res) => {
 app.get('/api/teachers/count', async (req, res) => {
   try {
     const count = await Teacher.countDocuments({});
+    res.json({ count });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// API Endpoint to get the number of Courses
+app.get('/api/courses/count', async (req, res) => {
+  try {
+    const count = await Course.countDocuments({});
     res.json({ count });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });

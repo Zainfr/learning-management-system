@@ -1,15 +1,79 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import EditStudentModal from "../../components/EditStudentModal";
 
 const AdminDashboard = () => {
   const [numberOfStudents, setNumberOfStudents] = useState(null);
   const [numberOfTeachers, setNumberOfTeachers] = useState(null);
+  const [numberofCourses, setNumberOfCourses] = useState(null);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentEntryType, setCurrentEntryType] = useState("");
   const [currentEntryId, setCurrentEntryId] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  // Function to open modal with selected student data
+  const handleEditStudent = (studentId) => {
+    const student = students.find((s) => s._id === studentId);
+    setSelectedStudent(student);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedStudent(null);
+  };
+
+  const handleSaveStudent = async (updatedStudent) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/students/${updatedStudent.rollno}`,
+        {
+          method: "PUT", // Update request
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedStudent), // Send updated student data in the body
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update student");
+      }
+
+      // Extract updated student data from the response
+      const updatedData = await response.json();
+
+      // Update the state with the updated students
+      const updatedStudents = students.map((s) =>
+        s.rollno === updatedStudent.rollno ? updatedData.student : s
+      );
+
+      setStudents(updatedStudents); // Update the student list
+
+      setMessage("Student updated successfully!");
+      setIsModalOpen(false); // Close the modal after a successful update
+    } catch (error) {
+      console.log("Error during update:", error);
+      setError("Failed to update the student. Please try again.");
+    }
+  };
+
+  const fetchCoursesCount = async () => {
+    try {
+      const coursesResponse = await fetch(
+        "http://localhost:3001/api/courses/count"
+      );
+      const coursesData = await coursesResponse.json();
+      setNumberOfCourses(coursesData.count);
+    } catch (error) {
+      console.error("Error fetching course count:", error);
+    }
+  };
 
   // Function to fetch students entry
   const fetchStudents = async () => {
@@ -51,6 +115,8 @@ const AdminDashboard = () => {
     };
 
     fetchTeachersCount();
+
+    fetchCoursesCount();
   }, []);
 
   //All the deletion process code
@@ -167,6 +233,14 @@ const AdminDashboard = () => {
                   {numberOfTeachers !== null ? numberOfTeachers : "Loading..."}
                 </p>
               </div>
+              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
+                <h2 className="text-xl font-bold text-gray-800 ">
+                  Number of Courses
+                </h2>
+                <p className="text-4xl font-semibold text-yellow-600  mt-2">
+                  {numberofCourses !== null ? numberofCourses : "Loading..."}
+                </p>
+              </div>
             </div>
           </div>
           <div className="p-6">
@@ -199,10 +273,16 @@ const AdminDashboard = () => {
                       </td>
                       <td className="py-2 px-4 border-b border-gray-300">
                         <button
-                          className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
+                          className="bg-red-500 text-white py-1 px-3 mx-3 rounded hover:bg-red-600 transition"
                           onClick={() => handleDeleteStudent(student._id)}
                         >
                           Delete
+                        </button>
+                        <button
+                          className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 transition"
+                          onClick={() => handleEditStudent(student._id)}
+                        >
+                          Edit
                         </button>
                       </td>
                     </tr>
@@ -265,6 +345,16 @@ const AdminDashboard = () => {
                 )}
               </tbody>
             </table>
+            {isModalOpen && (
+              <EditStudentModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                student={selectedStudent}
+                onSave={handleSaveStudent}
+                error={error}
+                message={message}
+              />
+            )}
           </div>
 
           <ConfirmationModal
