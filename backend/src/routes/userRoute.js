@@ -7,6 +7,7 @@ import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
 import {importTeacherForm,importTeacherCsv} from "../controllers/teachers/teacherFormController.js";
 import { createCourse } from "../middlewares/courseCreation.js";
+import { updateStudentByRollno } from "../controllers/studentController.js";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
-
+//Student Routing Starts here
 router.post('/importUser', upload.single('file'), importUserCsv); //Handles CSV
 
 router.post('/form-submit', importUserForm);                       //Handles Form Submission
@@ -36,6 +37,8 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+router.put('/students/:rollno', updateStudentByRollno);
 
 //teacher Routing starts here
 router.post('/teacher-form-submit',importTeacherForm);
