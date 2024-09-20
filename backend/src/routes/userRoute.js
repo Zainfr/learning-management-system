@@ -1,14 +1,16 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
+import bodyParser from "body-parser";
 import importUserCsv from "../controllers/csvController.js"; // Import the correct controller function
 import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
 import {importTeacherForm,importTeacherCsv} from "../controllers/teachers/teacherFormController.js";
+import { createCourse } from "../middlewares/courseCreation.js";
 
 const router = express.Router();
 
-//router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(express.static(path.resolve('public')));
 
@@ -38,6 +40,8 @@ router.get('/', async (req, res) => {
 //teacher Routing starts here
 router.post('/teacher-form-submit',importTeacherForm);
 router.post('/teacher-csv-submit',upload.single('file'),importTeacherCsv);
+
+router.post('/create-course',createCourse);
 
 
 export default router;
