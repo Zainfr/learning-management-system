@@ -2,7 +2,7 @@ import csvtojson from 'csvtojson';
 import { Student } from '../models/student.model.js';
 import { Semester } from '../models/sem.model.js';
 import {Teacher} from '../models/teacher.models.js';
-import createStudentFolders from './folderController.js';
+import { createStudentFolders } from './folderController.js';
 
 
 // Function to handle CSV import and folder creation

@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 
 // Function to create student folders
-const createStudentFolders = (student, subjects) => {
+export const createStudentFolders = (student, subjects) => {
     const baseDir = path.join('.', 'public', 'uploads', student.rollno);
     const assignmentDir = path.join(baseDir, 'assignments');
 
@@ -20,4 +20,20 @@ const createStudentFolders = (student, subjects) => {
     };
 };
 
-export default createStudentFolders;
+export const createTeacherFolder = async (teacher, subjects) => {
+    const baseDir = path.join('.', 'public', 'uploads', teacher.teacher_name);
+    const materialDir = path.join(baseDir, 'Study Materials');
+
+    // Create base directory for the teacher
+    fs.mkdirSync(baseDir, { recursive: true });
+
+    // Loop through each subject and create folders
+    subjects.forEach(subject => {
+        const subjectFolder = path.join(materialDir, subject);  // Create folder for each subject
+        fs.mkdirSync(subjectFolder, { recursive: true });
+    });
+
+    return {
+        materialFolderPath: materialDir,
+    };
+};
