@@ -1,6 +1,6 @@
 import { Student } from "../models/student.model.js";
 import { Semester } from '../models/sem.model.js';
-import createStudentFolders from "./folderController.js";
+import { createStudentFolders } from "./folderController.js";
 
 const importUserForm = async (req, res) => {
   try {

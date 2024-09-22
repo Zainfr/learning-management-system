@@ -7,6 +7,9 @@ import { Semester } from "./models/sem.model.js";
 import { Course } from "./models/course.model.js";
 import assignmentRoutes from './routes/userRoute.js'; // Import assignment routes
 import path from 'path';
+
+import { Subject } from "./models/subjects.model.js";
+
 const app = express();
 
 // CORS middleware
@@ -49,6 +52,16 @@ app.get('/api/semesters', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.get('/api/subjects',async(req,res) => {
+  try {
+    const subjects = await Subject.find({});
+    res.json(subjects);
+  } catch (error) {
+    console.error('Something Grave bad happened :',error);
+    res.status(500).json({message: 'Internal Server error'});
+  }
+})
 
 //API endpoint for (to get sutdents)students
 app.get('/api/students', async (req, res) => {

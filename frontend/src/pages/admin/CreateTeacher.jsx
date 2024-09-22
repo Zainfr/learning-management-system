@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SideBar from '../../components/SideBar';
 import Papa from 'papaparse';
+import { Dropdown } from "primereact/dropdown";
+
 
 const CreateTeacher = () => {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
+    const [subjects, setSubjects] = useState([]);
+    const [isFocused, setIsFocused] = useState(false);
     const [formData, setFormData] = useState({
         teacher_name: '',
+        subjects : '',
         email: '',
         password: '',
         mobile: '',
@@ -16,9 +21,42 @@ const CreateTeacher = () => {
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
 
+    const subjectOptions = subjects.map((subjects) => ({
+        label: subjects.name,
+        value: subjects._id,
+    }));
+    useEffect(() => {
+        const fetchSubjects = async() => {
+            try {
+                const response = await fetch('http://localhost:3001/api/subjects');
+                if (!response.ok) {
+                    console.error(error)
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(data); // Log the data to check structure
+                if (Array.isArray(data)) {
+                    setSubjects(data);
+                } else {
+                    throw new Error("Unexpected response format");
+                }
+            } catch (error) {
+                console.error("Error fetching Subjects:", error);
+                setError("Failed to fetch Subjects. Please try again later.");
+            }
+        }
+        fetchSubjects();
+    }, []);
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
+
+    const handleDropdownChange = (e) => {
+        setFormData({
+            ...formData,
+            subjects: e.value,  // e.value holds the selected subject's _id
+        });
+    };    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,6 +100,11 @@ const CreateTeacher = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!formData.subjects) {
+            alert('Please select a subject');
+            return;
+        }
+    
         // Handle form submission logic here
         try {
             const response = await fetch(`http://localhost:3001/teacher-form-submit`, {
@@ -108,6 +151,21 @@ const CreateTeacher = () => {
                                     required
                                 />
                             </div>
+                            <label htmlFor="subject" className="block text-gray-700 mb-2">
+                                Subject
+                            </label>
+                            <Dropdown
+                                id="subject"
+                                name="subjects"
+                                value={formData.subjects}  // Ensure this points to the correct state
+                                options={subjectOptions}
+                                onChange={handleDropdownChange}  // Use the new handleDropdownChange function
+                                placeholder="Select Subject"
+                                className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"} rounded-md`}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                            />
+
                             <div className='mb-4'>
                                 <label htmlFor='email' className='block text-gray-700 mb-2'>Email</label>
                                 <input

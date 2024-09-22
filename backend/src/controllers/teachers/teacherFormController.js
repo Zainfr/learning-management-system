@@ -1,9 +1,10 @@
 import { Teacher } from '../../models/teacher.models.js';
+import { createTeacherFolder } from '../folderController.js';
 import csvtojson from 'csvtojson'
 
 export const importTeacherForm = async (req,res) => {
     try {
-        const {teacher_name, email, password, mobile} = req.body;
+        const {teacher_name, email, password, mobile,subjects} = req.body;
 
         //const mentees_form = await Teacher.findById(mentees).populate('name');
 
@@ -12,10 +13,11 @@ export const importTeacherForm = async (req,res) => {
             email,
             password,
             mobile,
+            subjects,
         });
 
         await newTeacher.save();
-
+        await createTeacherFolder(newTeacher,subjects);
         res.status(200).json({success : true, msg : "Teacher Created Successfully"});
         console.log("Recieved Form Data : ", req.body);
     } catch (error) {
