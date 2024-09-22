@@ -7,6 +7,8 @@ import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
 import {importTeacherForm,importTeacherCsv} from "../controllers/teachers/teacherFormController.js";
 import { createCourse } from "../middlewares/courseCreation.js";
+import { submitAssignment, getSubmissions, createAssignment } from '../controllers/assignmentController.js';
+
 
 const router = express.Router();
 
@@ -42,6 +44,19 @@ router.post('/teacher-form-submit',importTeacherForm);
 router.post('/teacher-csv-submit',upload.single('file'),importTeacherCsv);
 
 router.post('/create-course',createCourse);
+
+//Assignment Routes
+//Create assignment route
+router.post('/create', createAssignment);
+
+// Configure multer for file uploads
+const uploadd = multer({ dest: 'uploads/assignments/' });
+
+// POST: Submit assignment
+router.post('/:assignmentId/submit', uploadd.single('assignment'), submitAssignment);
+
+// GET: Fetch all submissions for an assignment
+router.get('/:assignmentId/submissions', getSubmissions);
 
 
 export default router;
