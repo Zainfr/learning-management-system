@@ -5,7 +5,11 @@ import { Student } from "./models/student.model.js";
 import { Teacher } from "./models/teacher.models.js";
 import { Semester } from "./models/sem.model.js";
 import { Course } from "./models/course.model.js";
+import assignmentRoutes from './routes/userRoute.js'; // Import assignment routes
+import path from 'path';
+
 import { Subject } from "./models/subjects.model.js";
+
 const app = express();
 
 // CORS middleware
@@ -19,8 +23,13 @@ app.use(cors(corsOptions));
 // Express JSON middleware
 app.use(express.json());
 
+// Serve static files for uploaded assignments
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // Routes
 app.use('/', userRoute);
+app.use('/api/assignments', assignmentRoutes); // Add assignment routes
+
 
 // to get the Teacher id for frontend.
 app.get('/api/teachers',async(req,res) => {

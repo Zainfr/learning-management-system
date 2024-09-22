@@ -21,14 +21,14 @@ const teacherSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    subjects : [{
+        type : mongoose.Schema.ObjectId,
+        ref : "Subjects",
+    }],
     mentees : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Student",
     }],
-    subjects : [{
-        type : mongoose.Schema.ObjectId,
-        ref : "Subjects",
-    }]
 },{timestamps: true});
 
 teacherSchema.pre("save", async function(next) {
