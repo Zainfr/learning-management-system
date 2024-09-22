@@ -130,10 +130,13 @@ app.get('/api/teachers/count', async (req, res) => {
 });
 
 // API Endpoint to get the number of Courses
-app.get('/api/courses/count', async (req, res) => {
+app.get('/api/courses', async (req, res) => {
   try {
     const count = await Course.countDocuments({});
-    res.json({ count });
+    const courses = await Course.find()
+    res.json({ count,
+      courses
+     });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

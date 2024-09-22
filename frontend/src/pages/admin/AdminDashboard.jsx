@@ -9,6 +9,7 @@ const AdminDashboard = () => {
   const [numberofCourses, setNumberOfCourses] = useState(null);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentEntryType, setCurrentEntryType] = useState("");
   const [currentEntryId, setCurrentEntryId] = useState(null);
@@ -63,13 +64,12 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchCoursesCount = async () => {
+  const fetchCourses = async () => {
     try {
-      const coursesResponse = await fetch(
-        "http://localhost:3001/api/courses/count"
-      );
+      const coursesResponse = await fetch("http://localhost:3001/api/courses");
       const coursesData = await coursesResponse.json();
       setNumberOfCourses(coursesData.count);
+      setCourses(coursesData.courses);
     } catch (error) {
       console.error("Error fetching course count:", error);
     }
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
 
     fetchTeachersCount();
 
-    fetchCoursesCount();
+    fetchCourses();
   }, []);
 
   //All the deletion process code
@@ -340,6 +340,35 @@ const AdminDashboard = () => {
                   <tr>
                     <td colSpan="3" className="text-center py-4">
                       No teachers found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            <h2 className="text-2xl font-semibold mt-12 text-gray-700 mb-4">
+              Course List
+            </h2>
+            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border border-gray-300">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                    Course
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {courses && courses.length > 0 ? (
+                  courses.map((course) => (
+                    <tr key={course._id}>
+                      <td className="py-2 px-4 border-b border-gray-300">
+                        {course.course_name}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center py-4">
+                      No Course found
                     </td>
                   </tr>
                 )}
