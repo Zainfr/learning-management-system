@@ -4,7 +4,7 @@ import csvtojson from 'csvtojson'
 
 export const importTeacherForm = async (req,res) => {
     try {
-        const {teacher_name, email, password, mobile,subjects} = req.body;
+        const {teacher_name, email, password, mobile,subjects,mentees} = req.body;
 
         //const mentees_form = await Teacher.findById(mentees).populate('name');
 
@@ -14,6 +14,7 @@ export const importTeacherForm = async (req,res) => {
             password,
             mobile,
             subjects,
+            mentees,
         });
 
         await newTeacher.save();
