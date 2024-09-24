@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import importUserCsv from "../controllers/csvController.js"; // Import the correct controller function
 import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
-import {importTeacherForm,importTeacherCsv} from "../controllers/teachers/teacherFormController.js";
+import {importTeacherForm,importTeacherCsv , importAdmin} from "../controllers/teachers/teacherFormController.js";
 import { createCourse } from "../middlewares/courseCreation.js";
 import { submitAssignment, getSubmissions, createAssignment } from '../controllers/assignmentController.js';
 import { updateStudentByRollno } from "../controllers/studentController.js";
@@ -45,6 +45,9 @@ router.put('/students/:rollno', updateStudentByRollno);
 //teacher Routing starts here
 router.post('/teacher-form-submit',importTeacherForm);
 router.post('/teacher-csv-submit',upload.single('file'),importTeacherCsv);
+
+//Create Admin
+router.post('/admin-form-submit',importAdmin)
 
 //Course Routing Starts here
 router.post('/create-course',createCourse);
