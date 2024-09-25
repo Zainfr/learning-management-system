@@ -1,8 +1,12 @@
+import { Routes, Route } from "react-router-dom";
+import TeacherDashboard from "./TeacherDashboard";
 
 const Teacher = () => {
-    return (
-        <div>Teacher</div>
-    )
-}
+  return (
+    <Routes>
+      <Route path="/:id" element={<TeacherDashboard />} />
+    </Routes>
+  );
+};
 
-export default Teacher
+export default Teacher;

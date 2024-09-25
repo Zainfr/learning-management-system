@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
+import { Dropdown } from "primereact/dropdown";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import EditStudentModal from "../../components/EditStudentModal";
 
@@ -8,8 +9,13 @@ const AdminDashboard = () => {
   const [numberOfTeachers, setNumberOfTeachers] = useState(null);
   const [numberofCourses, setNumberOfCourses] = useState(null);
   const [students, setStudents] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [selectedSemester, setSelectedSemester] = useState(null);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
   const [teachers, setTeachers] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentEntryType, setCurrentEntryType] = useState("");
   const [currentEntryId, setCurrentEntryId] = useState(null);
@@ -64,6 +70,35 @@ const AdminDashboard = () => {
     }
   };
 
+  const semesterOptions = semesters.map((semester) => ({
+    label: semester.semester,
+    value: semester._id,
+  }));
+
+  const handleSemesterChange = (e) => {
+    const semester = e.target.value;
+    setSelectedSemester(semester);
+
+    if (semester === null) {
+      setFilteredStudents(students); // Show all students if no semester is selected
+    } else {
+      const filtered = students.filter((student) => student.sem === semester);
+      setFilteredStudents(filtered);
+    }
+  };
+
+  const handleCourseChange = (e) => {
+    const semester = e.target.value;
+    setSelectedSemester(semester);
+
+    if (semester === null) {
+      setFilteredCourses(courses);
+    } else {
+      const filtered = courses.filter((course) => course.sem === semester);
+      setFilteredCourses(filtered);
+    }
+  };
+
   const fetchCourses = async () => {
     try {
       const coursesResponse = await fetch("http://localhost:3001/api/courses");
@@ -97,25 +132,43 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch number of teachers
+  const fetchTeachersCount = async () => {
+    try {
+      const teachersResponse = await fetch(
+        "http://localhost:3001/api/teachers/count"
+      );
+      const teachersData = await teachersResponse.json();
+      setNumberOfTeachers(teachersData.count);
+    } catch (error) {
+      console.error("Error fetching teacher count:", error);
+    }
+  };
+
+  //fetch semesters
+  const fetchSemesters = async () => {
+    try {
+      const semestersResponse = await fetch(
+        "http://localhost:3001/api/semesters"
+      );
+
+      const semestersData = await semestersResponse.json();
+      if (Array.isArray(semestersData)) {
+        setSemesters(semestersData);
+      } else {
+        throw new Error("Unexpected response format");
+      }
+    } catch (error) {
+      console.error("Error fetching Semesters", error);
+    }
+  };
+
   useEffect(() => {
-    // Fetch students when the component mounts
+    // Fetching everything when the component mounts
+    fetchSemesters();
     fetchStudents();
     fetchTeachers();
-    // Fetch number of teachers
-    const fetchTeachersCount = async () => {
-      try {
-        const teachersResponse = await fetch(
-          "http://localhost:3001/api/teachers/count"
-        );
-        const teachersData = await teachersResponse.json();
-        setNumberOfTeachers(teachersData.count);
-      } catch (error) {
-        console.error("Error fetching teacher count:", error);
-      }
-    };
-
     fetchTeachersCount();
-
     fetchCourses();
   }, []);
 
@@ -200,13 +253,13 @@ const AdminDashboard = () => {
   };
   return (
     <div className="flex">
-      <div className=" fixed z-10 h-screen w-64 md:block">
+      <div className=" fixed z-20 h-screen w-64 md:block">
         <SideBar />
       </div>
 
       <div className="flex-grow md:ml-64">
         {/* Fixed Header */}
-        <div className="fixed top-0 left-0 md:left-[256px] right-0 bg-white shadow-md p-6 z-0">
+        <div className="fixed top-0 left-0 md:left-[256px] right-0 bg-white shadow-md p-6 z-10">
           <h1 className="text-3xl text-gray-700 font-semibold pl-8 ">
             Admin Dashboard
           </h1>
@@ -247,6 +300,24 @@ const AdminDashboard = () => {
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">
               Students List
             </h2>
+            <div className="mb-4">
+              <label htmlFor="semester" className="block text-gray-700 mb-2">
+                Semester
+              </label>
+              <Dropdown
+                id="sem"
+                name="sem"
+                value={selectedSemester}
+                options={semesterOptions}
+                onChange={handleSemesterChange}
+                placeholder="Select Semester"
+                className={`w-full border-2 ${
+                  isFocused ? "border-indigo-500" : "border-gray-300"
+                } rounded-md`}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+            </div>
             <table className="min-w-full bg-white p-6 rounded-md shadow-lg border border-gray-300">
               <thead>
                 <tr className="bg-gray-100">
@@ -262,8 +333,8 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {students && students.length > 0 ? (
-                  students.map((student) => (
+                {filteredStudents && filteredStudents.length > 0 ? (
+                  filteredStudents.map((student) => (
                     <tr key={student._id}>
                       <td className="py-2 px-4 border-b border-gray-300">
                         {student.name}
@@ -348,6 +419,24 @@ const AdminDashboard = () => {
             <h2 className="text-2xl font-semibold mt-12 text-gray-700 mb-4">
               Course List
             </h2>
+            <div className="mb-4">
+              <label htmlFor="semester" className="block text-gray-700 mb-2">
+                Select Semester
+              </label>
+              <Dropdown
+                id="sem"
+                name="sem"
+                value={selectedSemester}
+                options={semesterOptions}
+                onChange={handleCourseChange}
+                placeholder="Select Semester"
+                className={`w-full border-2 ${
+                  isFocused ? "border-indigo-500" : "border-gray-300"
+                } rounded-md`}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+            </div>
             <table className="min-w-full bg-white p-6 rounded-md shadow-lg border border-gray-300">
               <thead>
                 <tr className="bg-gray-100">
@@ -357,8 +446,8 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {courses && courses.length > 0 ? (
-                  courses.map((course) => (
+                {filteredCourses && filteredCourses.length > 0 ? (
+                  filteredCourses.map((course) => (
                     <tr key={course._id}>
                       <td className="py-2 px-4 border-b border-gray-300">
                         {course.course_name}
