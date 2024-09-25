@@ -5,10 +5,11 @@ import bodyParser from "body-parser";
 import importUserCsv from "../controllers/csvController.js"; // Import the correct controller function
 import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
-import {importTeacherForm,importTeacherCsv} from "../controllers/teachers/teacherFormController.js";
+import {importTeacherForm,importTeacherCsv , importAdmin} from "../controllers/teachers/teacherFormController.js";
 import { createCourse } from "../middlewares/courseCreation.js";
 import { submitAssignment, getSubmissions, createAssignment } from '../controllers/assignmentController.js';
 import { updateStudentByRollno } from "../controllers/studentController.js";
+import { login } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -45,10 +46,13 @@ router.put('/students/:rollno', updateStudentByRollno);
 router.post('/teacher-form-submit',importTeacherForm);
 router.post('/teacher-csv-submit',upload.single('file'),importTeacherCsv);
 
+//Create Admin
+router.post('/admin-form-submit',importAdmin)
+
+//Course Routing Starts here
 router.post('/create-course',createCourse);
 
 //Assignment Routes
-//Create assignment route
 router.post('/create', createAssignment);
 
 // Configure multer for file uploads
@@ -60,5 +64,10 @@ router.post('/:assignmentId/submit', uploadd.single('assignment'), submitAssignm
 // GET: Fetch all submissions for an assignment
 router.get('/:assignmentId/submissions', getSubmissions);
 
+
+
+
+// AUTH Routing Starts Here 
+router.use('/login',login);
 
 export default router;

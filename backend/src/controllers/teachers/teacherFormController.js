@@ -1,3 +1,4 @@
+import { Admin } from '../../models/admin.model.js';
 import { Teacher } from '../../models/teacher.models.js';
 import { createTeacherFolder } from '../folderController.js';
 import csvtojson from 'csvtojson'
@@ -50,5 +51,29 @@ export const importTeacherCsv = async (req,res) => {
         res.send({status: 200, success: true, msg: 'CSV IMPORTED'});
     } catch (error) {
         res.send({status: 400,success:false,msg:error.message});
+    }
+}
+
+export const importAdmin = async (req,res) => {
+    try {
+        const {name, email, password, mobile} = req.body;
+        const newAdmin = new Admin({
+            name,
+            email,
+            password,
+            mobile,
+        });
+
+        await newAdmin.save();
+        res.status(200).json({success : true, msg : "Admin Created Successfully"});
+        console.log("Recieved Form Data : ", req.body);
+
+    } catch (error) {
+        if (error.code === 11000) {
+            // This error code indicates a duplicate key error
+            res.status(400).json({ success: false, msg: "Email or mobile number already exists" });
+          } else {
+            res.status(400).json({ success: false, msg: error.message });
+          }
     }
 }
