@@ -68,6 +68,6 @@ router.get('/:assignmentId/submissions', getSubmissions);
 
 
 // AUTH Routing Starts Here 
-router.use('/login',login);
+router.use('/api/login',login);
 
 export default router;

@@ -35,7 +35,7 @@ const CreateTeacher = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data); // Log the data to check structure
+
         if (Array.isArray(data)) {
           setSubjects(data);
         } else {
@@ -118,8 +118,6 @@ const CreateTeacher = () => {
           body: JSON.stringify(formData),
         }
       );
-      console.log(response);
-      console.log("Form Data:", formData);
     } catch (error) {
       console.log("", error);
     }
