@@ -5,11 +5,12 @@ import bodyParser from "body-parser";
 import importUserCsv from "../controllers/csvController.js"; // Import the correct controller function
 import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
-import {importTeacherForm,importTeacherCsv , importAdmin} from "../controllers/teachers/teacherFormController.js";
+import {importTeacherForm,importTeacherCsv , importAdmin} from "../controllers/teachers_Admin/teacherAdminController.js";
 import { createCourse } from "../middlewares/courseCreation.js";
 import { submitAssignment, getSubmissions, createAssignment } from '../controllers/assignmentController.js';
 import { updateStudentByRollno } from "../controllers/studentController.js";
 import { login } from "../middlewares/auth.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 
@@ -69,5 +70,21 @@ router.get('/:assignmentId/submissions', getSubmissions);
 
 // AUTH Routing Starts Here 
 router.use('/login',login);
+
+router.use('/admin', verifyToken(['Admin']), (req, res) => {
+    // Admin route logic
+    res.json({ message: 'Welcome, Admin!' });
+});
+
+router.use('/teacher', verifyToken(['Teacher']), (req, res) => {
+    // Teacher route logic
+    res.json({ message: 'Welcome, Teacher!' });
+});
+
+router.use('/student', verifyToken(['Student']), (req, res) => {
+    // Student route logic
+    res.json({ message: 'Welcome, Student!' });
+});
+
 
 export default router;
