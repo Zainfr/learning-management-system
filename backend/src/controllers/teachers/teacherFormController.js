@@ -26,9 +26,8 @@ export const importTeacherForm = async (req,res) => {
         if (error.code === 11000) {
             // This error code indicates a duplicate key error
             res.status(400).json({ success: false, msg: "Email or mobile number already exists" });
-          } else {
-            res.status(400).json({ success: false, msg: error.message });
           }
+        
     }
 }
 

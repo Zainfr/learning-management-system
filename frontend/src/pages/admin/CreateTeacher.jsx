@@ -6,7 +6,7 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 
 const CreateTeacher = () => {
-  const [data, setData] = useState([]);
+  const [students, setStudents] = useState([]);
   const [error, setError] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
@@ -16,6 +16,7 @@ const CreateTeacher = () => {
     email: "",
     password: "",
     mobile: "",
+    mentees: "",
   });
 
   const [file, setFile] = useState(null);
@@ -26,7 +27,22 @@ const CreateTeacher = () => {
     label: subjects.name,
     value: subjects._id,
   }));
+
+  const studentOptions = students.map((student) => ({
+    label: student.name,
+    value: student._id,
+  }));
+
   useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/api/students`);
+        const data = await response.json();
+        setStudents(data.students);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+    };
     const fetchSubjects = async () => {
       try {
         const response = await fetch("http://localhost:3001/api/subjects");
@@ -46,16 +62,25 @@ const CreateTeacher = () => {
         setError("Failed to fetch Subjects. Please try again later.");
       }
     };
+
+    fetchStudents();
     fetchSubjects();
   }, []);
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
-  const handleDropdownChange = (e) => {
+  const handleDropdownChange1 = (e) => {
     setFormData({
       ...formData,
       subjects: e.value, // e.value holds the selected subject's _id
+    });
+  };
+
+  const handleDropdownChange2 = (e) => {
+    setFormData({
+      ...formData,
+      mentees: e.value, // e.value holds the selected subject's _id
     });
   };
 
@@ -168,7 +193,7 @@ const CreateTeacher = () => {
                   name="subjects"
                   value={formData.subjects} // Ensure this points to the correct state
                   options={subjectOptions}
-                  onChange={handleDropdownChange} // Use the new handleDropdownChange function
+                  onChange={handleDropdownChange1} // Use the new handleDropdownChange function
                   placeholder="Select Subject"
                   className={`w-full border-2 ${
                     isFocused ? "border-indigo-500" : "border-gray-300"
@@ -225,6 +250,21 @@ const CreateTeacher = () => {
                     Mobile No.
                   </label>
                 </FloatLabel>
+              </div>
+              <div className="mb-8">
+                <Dropdown
+                  id="mentees"
+                  name="mentees"
+                  value={formData.mentees} // Ensure this points to the correct state
+                  options={studentOptions}
+                  onChange={handleDropdownChange2} // Use the new handleDropdownChange function
+                  placeholder="Select mentees"
+                  className={`w-full border-2 ${
+                    isFocused ? "border-indigo-500" : "border-gray-300"
+                  } rounded-md`}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                />
               </div>
               <button
                 type="submit"

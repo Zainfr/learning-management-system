@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Header from "../../components/Header";
 
 const StudentDashboard = () => {
-    return (
-        <div>StudentDashboard</div>
-    )
-}
+  return (
+    <div>
+      <Header user="Student" />
+      <div>Assignment</div>
+    </div>
+  );
+};
 
-export default StudentDashboard
+export default StudentDashboard;

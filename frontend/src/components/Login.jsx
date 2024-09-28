@@ -16,7 +16,6 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    console.log(formData);
 
     try {
       const response = await fetch("http://localhost:3001/api/login", {
@@ -40,7 +39,6 @@ const Login = () => {
         setError(data.msg);
       } else {
         localStorage.setItem("token", data.token);
-        alert("Login Successful!");
 
         if (data.user.type === "Admin") {
           navigate(`/admin/${data.user.id}`);
