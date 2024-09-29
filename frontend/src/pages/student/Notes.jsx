@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "../../components/Header";
 import StudentSidebar from "./StudentSidebar";
-const StudentDashboard = () => {
+const Notes = () => {
   return (
     <div>
-      <Header user="Student Dashboard" />
+      <Header user="Notes" />
       <StudentSidebar />
     </div>
   );
 };
 
-export default StudentDashboard;
+export default Notes;
