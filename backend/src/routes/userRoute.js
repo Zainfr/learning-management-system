@@ -10,7 +10,6 @@ import { createCourse } from "../middlewares/courseCreation.js";
 import { submitAssignment, getSubmissions, createAssignment } from '../controllers/assignmentController.js';
 import { updateStudentByRollno } from "../controllers/studentController.js";
 import { login } from "../middlewares/auth.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 
@@ -64,27 +63,5 @@ router.post('/:assignmentId/submit', uploadd.single('assignment'), submitAssignm
 
 // GET: Fetch all submissions for an assignment
 router.get('/:assignmentId/submissions', getSubmissions);
-
-
-
-
-// AUTH Routing Starts Here 
-router.use('/api/login',login);
-
-router.use('/admin', verifyToken(['Admin']), (req, res) => {
-    // Admin route logic
-    res.json({ message: 'Welcome, Admin!' });
-});
-
-router.use('/teacher', verifyToken(['Teacher']), (req, res) => {
-    // Teacher route logic
-    res.json({ message: 'Welcome, Teacher!' });
-});
-
-router.use('/student', verifyToken(['Student']), (req, res) => {
-    // Student route logic
-    res.json({ message: 'Welcome, Student!' });
-});
-
 
 export default router;

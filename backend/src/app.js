@@ -7,7 +7,7 @@ import { Semester } from "./models/sem.model.js";
 import { Course } from "./models/course.model.js";
 import assignmentRoutes from './routes/userRoute.js'; // Import assignment routes
 import path from 'path';
-
+import authRoute from "./routes/authRoute.js";
 import { Subject } from "./models/subjects.model.js";
 
 const app = express();
@@ -29,6 +29,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // Routes
 app.use('/', userRoute);
 app.use('/api/assignments', assignmentRoutes); // Add assignment routes
+app.use('/api/auth',authRoute);
 
 
 // to get the Teacher id for frontend.
