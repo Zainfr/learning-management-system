@@ -11,9 +11,9 @@ const submissionSchema = new mongoose.Schema({
 });
 
 const assignmentSchema = new mongoose.Schema({
-  courseId: { 
+  subjectId: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Course' 
+    ref: 'Subject' 
 },
   teacher: {
     type: mongoose.Schema.Types.ObjectId, 

@@ -1,4 +1,5 @@
 import { Admin } from '../../models/admin.model.js';
+import { Student } from '../../models/student.model.js';
 import { Teacher } from '../../models/teacher.models.js';
 import { createTeacherFolder } from '../folderController.js';
 import csvtojson from 'csvtojson'
@@ -76,3 +77,23 @@ export const importAdmin = async (req,res) => {
           }
     }
 }
+
+
+//fetch teacher by their object id
+
+export const getTeacher = async (req, res) => {
+    try {
+      const teacher = await Teacher.findById(req.params.id);
+  
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+  
+      res.json({
+        teacher,
+      });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+

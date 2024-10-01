@@ -17,3 +17,22 @@ export const updateStudentByRollno = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+
+  //fetch Student by their object id
+
+  export const getStudent = async (req, res) => {
+    try {
+      const student = await Student.findById(req.params.id);
+  
+      if (!student) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+  
+      res.json({
+        student,
+      });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };

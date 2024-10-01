@@ -7,8 +7,8 @@ const Student = () => {
   return (
     <Routes>
       <Route path="/:id" element={<StudentDashboard />} />
-      <Route path="/studentexperiment/:id" element={<StudentExperiment />} />
-      <Route path="/note/:id" element={<Notes />} />
+      <Route path="/assignments/:id" element={<StudentExperiment />} />
+      <Route path="/upload-assignment/:id" element={<Notes />} />
     </Routes>
   );
 };

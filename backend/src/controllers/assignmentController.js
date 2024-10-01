@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 
 //Create assignment
 export const createAssignment = async (req, res) => {
-    const { courseId, teacher, title, description, dueDate } = req.body;
+    const { subjectId, teacher, title, description, dueDate } = req.body;
   
     if (!title) {
       return res.status(400).json({ message: 'Assignment title is required' });
@@ -20,7 +20,7 @@ export const createAssignment = async (req, res) => {
       }
   
       const newAssignment = new Assignment({
-        courseId,
+        subjectId,
         teacher,
         title,
         description,
@@ -112,6 +112,23 @@ export const getSubmissions = async (req, res) => {
     res.status(500).json({ message: 'Error fetching submissions', error });
   }
 };
+
+// Get all assignments
+export const getAllAssignments = async (req, res) => {
+  try {
+
+    const assignments = await Assignment.find({}, 'subjectId teacher title description dueDate');
+
+    if (!assignments || assignments.length === 0) {
+      return res.status(404).json({ message: 'No assignments found' });
+    }
+
+    res.status(200).json(assignments);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching assignments', error: error.toString() });
+  }
+};
+
 
 // Placeholder for future authentication
 export const authMiddleware = (req, res, next) => {
