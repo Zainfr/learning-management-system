@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/aiktc-logo.png";
 import StudentProfile from "../pages/student/StudentProfile";
 
 const Header = ({ user }) => {
   const [isProfileVisible, setProfileVisible] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove the token from local storage
+    navigate("/"); // Redirect to the login page
+  };
 
   const toggleProfile = () => {
     setProfileVisible(!isProfileVisible);
@@ -30,7 +36,9 @@ const Header = ({ user }) => {
         </button>
       </div>
       <div className="float-right m-3">
-        {isProfileVisible && <StudentProfile />}
+        {isProfileVisible && (
+          <StudentProfile onLogout={handleLogout} user={user} />
+        )}
       </div>
     </>
   );
