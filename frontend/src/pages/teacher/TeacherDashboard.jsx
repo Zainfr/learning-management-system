@@ -12,10 +12,10 @@ const TeacherDashboard = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const handleClick1 = () => {
-    navigate(`/teacher/assignment/${id}`);
+    navigate(`/teacher/${id}/assignment`);
   };
   const handleClick2 = () => {
-    navigate(`/teacher/submissions/${id}`);
+    navigate(`/teacher/${id}/submissions`);
   };
 
   return (

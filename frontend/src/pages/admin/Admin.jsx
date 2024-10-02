@@ -7,10 +7,13 @@ import AdminDashboard from "./AdminDashboard";
 const Admin = () => {
   return (
     <Routes>
-      <Route path="/:id" element={<AdminDashboard />} />
-      <Route path="/createStudent/:id" element={<CreateStudent />} />
-      <Route path="/createTeacher/:id" element={<CreateTeacher />} />
-      <Route path="/createCourse/:id" element={<CreateCourse />} />
+      {/* This will match "/admin/:id" and show the AdminDashboard */}
+      <Route path="/" element={<AdminDashboard />} />
+
+      {/* These will match "/admin/:id/createStudent", "/admin/:id/createTeacher", and "/admin/:id/createCourse" */}
+      <Route path="createStudent" element={<CreateStudent />} />
+      <Route path="createTeacher" element={<CreateTeacher />} />
+      <Route path="createCourse" element={<CreateCourse />} />
     </Routes>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 
@@ -11,46 +11,41 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+    
     try {
-      const response = await fetch("http://localhost:3001/api/login", {
+      const response = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+        body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.msg || `HTTP error! Status: ${response.status}`);
+      }
 
       if (!data.success) {
         setError(data.msg);
       } else {
-        localStorage.setItem("token", data.token);
-
-        if (data.user.type === "Admin") {
-          navigate(`/admin/${data.user.id}`);
-        } else if (data.user.type === "Teacher") {
-          navigate(`/teacher/${data.user.id}`);
-        } else {
-          navigate(`/student/${data.user.id}`);
-        }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Redirect to the page the user was trying to access, or to their default page
+        const from = location.state?.from?.pathname || `/${data.user.type.toLowerCase()}/${data.user.id}`;
+        navigate(from, { replace: true });
       }
     } catch (err) {
       console.error("Error during login:", err);
-      setError("An error occurred during login.");
+      setError(err.message || "An error occurred during login.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +55,7 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value, // Dynamically update email or password based on the input name
+      [name]: value,
     }));
   };
 
@@ -74,9 +69,9 @@ const Login = () => {
             <InputText
               id="email"
               type="email"
-              name="email" // Ensure the name is "email"
+              name="email"
               value={formData.email}
-              onChange={handleChange} // Call handleChange on change
+              onChange={handleChange}
               className="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
             />
@@ -90,9 +85,9 @@ const Login = () => {
             <InputText
               id="password"
               type="password"
-              name="password" // Ensure the name is "password"
+              name="password"
               value={formData.password}
-              onChange={handleChange} // Call handleChange on change
+              onChange={handleChange}
               className="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
             />
@@ -104,7 +99,7 @@ const Login = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-blue-300"
         >
           {loading ? "Logging in..." : "Login"}
         </button>

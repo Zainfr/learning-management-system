@@ -10,7 +10,7 @@ const StudentDashboard = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const handleClick1 = () => {
-    navigate(`/student/assignments/${id}`);
+    navigate(`/student/${id}/assignments`);
   };
   return (
     <div>

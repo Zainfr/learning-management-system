@@ -6,9 +6,9 @@ import ViewAssignments from "./ViewAssignments";
 const Teacher = () => {
   return (
     <Routes>
-      <Route path="/:id" element={<TeacherDashboard />} />
-      <Route path="/submissions/:id" element={<ViewAssignments />} />
-      <Route path="/assignment/:id" element={<CreateAssignment />} />
+      <Route path="/" element={<TeacherDashboard />} />
+      <Route path="submissions" element={<ViewAssignments />} />
+      <Route path="assignment" element={<CreateAssignment />} />
     </Routes>
   );
 };

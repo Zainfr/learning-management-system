@@ -1,30 +1,30 @@
 import csvtojson from 'csvtojson';
 import { Student } from '../models/student.model.js';
 import { Semester } from '../models/sem.model.js';
-import {Teacher} from '../models/teacher.models.js';
+import { Teacher } from '../models/teacher.models.js';
 import { createStudentFolders } from './folderController.js';
+import { assignMenteesToTeacher } from '../middlewares/assignMentee.js';
 
-
-// Function to handle CSV import and folder creation
 const importUserCsv = async (req, res) => {
     try {
-        const userData = [];
         const jsonArray = await csvtojson().fromFile(req.file.path);
 
         const semesters = await Semester.find({}).populate('subjects');
         const semesterMap = new Map(semesters.map(s => [s.semester, s]));
 
+        const userData = [];
+
         for (const user of jsonArray) {
             const semester = semesterMap.get(Number(user.sem));
-
             if (!semester) {
                 throw new Error(`Semester ${user.sem} not found in the database`);
             }
 
-            const mentor = await Teacher.findOne({teacher_name : user.mentor});
-            if(!mentor){
-                throw new Error(`Teachers ${user.mentor} not found in the Database`);
+            const mentor = await Teacher.findOne({ teacher_name: user.mentor });
+            if (!mentor) {
+                throw new Error(`Teacher ${user.mentor} not found in the Database`);
             }
+
             // Prepare the student data
             const newStudent = {
                 name: user.name,
@@ -37,17 +37,30 @@ const importUserCsv = async (req, res) => {
             };
 
             // Create folders for the student
-            createStudentFolders(newStudent, semester.subjects);
+            try {
+                await createStudentFolders(newStudent, semester.subjects); // Ensure async handling
+            } catch (folderError) {
+                throw new Error(`Folder creation failed for student ${user.name}: ${folderError.message}`);
+            }
 
             // Push the student data to the array
             userData.push(newStudent);
         }
 
         // Insert all student data into the database
-        await Student.insertMany(userData);
-        res.send({ status: 200, success: true, msg: 'CSV IMPORTED' });
+        const insertedStudents = await Student.insertMany(userData);
 
+        // Assign mentees to the mentor
+        for (const student of insertedStudents) {
+            const updatedTeacher = await assignMenteesToTeacher(student.mentor, student._id);
+            if (updatedTeacher) {
+                console.log(`Mentee assigned to teacher ${updatedTeacher.teacher_name}`);
+            }
+        }
+
+        res.send({ status: 200, success: true, msg: 'CSV IMPORTED' });
     } catch (error) {
+        console.error('Error during CSV import:', error.message);
         res.status(400).send({ status: 400, success: false, msg: error.message });
     }
 };
