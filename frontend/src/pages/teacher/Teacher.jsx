@@ -1,10 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import TeacherDashboard from "./TeacherDashboard";
+import CreateAssignment from "./CreateAssignment";
+import ViewAssignments from "./ViewAssignments";
 
 const Teacher = () => {
   return (
     <Routes>
-      <Route path="/:id" element={<TeacherDashboard />} />
+      <Route path="/" element={<TeacherDashboard />} />
+      <Route path="submissions" element={<ViewAssignments />} />
+      <Route path="assignment" element={<CreateAssignment />} />
     </Routes>
   );
 };

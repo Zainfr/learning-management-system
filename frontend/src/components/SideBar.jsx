@@ -46,7 +46,7 @@ const SideBar = () => {
               </li>
               <li className="mb-4">
                 <Link
-                  to={`/admin/createCourse/${id}`}
+                  to={`/admin/${id}/createCourse`}
                   className={`text-lg p-2 block rounded no-underline ${
                     isActive("/admin/createCourse")
                       ? "bg-white text-gray-900  border-2 border-white"
@@ -58,7 +58,7 @@ const SideBar = () => {
               </li>
               <li className="mb-4">
                 <Link
-                  to={`/admin/createStudent/${id}`}
+                  to={`/admin/${id}/createStudent`}
                   className={`text-lg p-2 block rounded no-underline ${
                     isActive("/admin/createStudent")
                       ? "bg-white text-gray-900  border-2 border-white"
@@ -70,7 +70,7 @@ const SideBar = () => {
               </li>
               <li className="mb-4">
                 <Link
-                  to={`/admin/createTeacher/${id}`}
+                  to={`/admin/${id}/createTeacher`}
                   className={`text-lg p-2 block rounded no-underline ${
                     isActive("/admin/createTeacher")
                       ? "bg-white text-gray-900  border-2 border-white"
