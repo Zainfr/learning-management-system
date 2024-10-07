@@ -4,6 +4,7 @@ import { Semester } from '../models/sem.model.js';
 import { Teacher } from '../models/teacher.models.js';
 import { createStudentFolders } from './folderController.js';
 import { assignMenteesToTeacher } from '../middlewares/assignMentee.js';
+import bcrypt from 'bcrypt';
 
 const importUserCsv = async (req, res) => {
     try {
@@ -25,7 +26,10 @@ const importUserCsv = async (req, res) => {
                 throw new Error(`Teacher ${user.mentor} not found in the Database`);
             }
 
-            // Prepare the student data
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+
+            // Prepare the student data with hashed password
             const newStudent = {
                 name: user.name,
                 rollno: user.rollno,
@@ -33,12 +37,12 @@ const importUserCsv = async (req, res) => {
                 sem: semester._id, // Use the ObjectId of the semester
                 mentor: mentor._id,
                 email: user.email,
-                password: user.password,
+                password: hashedPassword, // Use the hashed password
             };
 
             // Create folders for the student
             try {
-                await createStudentFolders(newStudent, semester.subjects); // Ensure async handling
+                createStudentFolders(newStudent, semester.subjects); // Ensure async handling
             } catch (folderError) {
                 throw new Error(`Folder creation failed for student ${user.name}: ${folderError.message}`);
             }
@@ -58,9 +62,9 @@ const importUserCsv = async (req, res) => {
             }
         }
 
-        res.send({ status: 200, success: true, msg: 'CSV IMPORTED' });
+        res.send({ status: 200, success: true, msg: 'Students Imported Successfully'});
     } catch (error) {
-        console.error('Error during CSV import:', error.message);
+        console.error('Error during importing CSV:', error.message);
         res.status(400).send({ status: 400, success: false, msg: error.message });
     }
 };

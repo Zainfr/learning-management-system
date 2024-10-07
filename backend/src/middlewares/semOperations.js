@@ -1,5 +1,7 @@
 import { Semester } from "../models/sem.model.js";
 import { Subject } from "../models/subjects.model.js";
+import { Student } from "../models/student.model.js";
+import { createStudentFolders } from "../controllers/folderController.js";
 
 export async function createSemester(){
   try {
@@ -64,3 +66,14 @@ export async function createSemester(){
     console.error("Error Creating Semester",error);
   }
 }
+
+// export async function assignSubjectsToStudent(studentId,semester){
+//   try {
+//     const student = await Student.findById(studentId);
+//     const subject = await Subject.find({semester : student.sem});
+
+//     await createStudentFolders(student,subject);
+//   } catch (error) {
+//     console.log("Error Assigning Subjects to Student",error);
+//   }
+// }
