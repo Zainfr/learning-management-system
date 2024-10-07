@@ -15,7 +15,7 @@ const TeacherDashboard = () => {
     navigate(`/teacher/${id}/assignment`);
   };
   const handleClick2 = () => {
-    navigate(`/teacher/${id}/submissions`);
+    navigate(`/teacher/${id}/assignments`);
   };
 
   return (

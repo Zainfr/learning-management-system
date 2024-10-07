@@ -1,14 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 import StudentDashboard from "./StudentDashboard";
 import StudentExperiment from "./StudentExperiment";
-import Notes from "./Notes";
+import UploadAssignment from "./UploadAssignment";
 
 const Student = () => {
   return (
     <Routes>
       <Route path="/" element={<StudentDashboard />} />
       <Route path="assignments" element={<StudentExperiment />} />
-      <Route path="/upload-assignment/:id" element={<Notes />} />
+      <Route
+        path="assignment/:assignmentId/upload"
+        element={<UploadAssignment />}
+      />
     </Routes>
   );
 };

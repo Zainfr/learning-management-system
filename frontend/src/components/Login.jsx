@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
+
     try {
       const response = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
@@ -36,11 +36,13 @@ const Login = () => {
       if (!data.success) {
         setError(data.msg);
       } else {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
         // Redirect to the page the user was trying to access, or to their default page
-        const from = location.state?.from?.pathname || `/${data.user.type.toLowerCase()}/${data.user.id}`;
+        const from =
+          location.state?.from?.pathname ||
+          `/${data.user.type.toLowerCase()}/${data.user.id}`;
         navigate(from, { replace: true });
       }
     } catch (err) {
@@ -103,6 +105,14 @@ const Login = () => {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+        <div className="text-center mt-4">
+          <a
+            href="/forgot-password"
+            className="text-indigo-500 hover:text-indigo-700 text-sm"
+          >
+            Forgot password?
+          </a>
+        </div>
       </form>
     </div>
   );

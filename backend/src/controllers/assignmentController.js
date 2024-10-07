@@ -129,6 +129,22 @@ export const getAllAssignments = async (req, res) => {
   }
 };
 
+// Get one assignments
+export const getOneAssignment = async (req, res) => {
+  
+  const { assignmentId } = req.params;
+  try {
+      const assignment = await Assignment.findById(assignmentId);
+      if (!assignment) {
+        return res.status(404).json({ message: 'Assignment not found' });
+      }
+  
+      res.status(200).json(assignment);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching Assignment', error });
+    }
+};
+
 
 // Placeholder for future authentication
 export const authMiddleware = (req, res, next) => {

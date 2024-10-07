@@ -64,9 +64,11 @@ const StudentExperiment = () => {
                     </td>
                     <td className="py-2 px-4 border-b border-gray-300">
                       <button
-                        className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-700 transition-all duration-300 ease-in-out transform hover:scale-105"
+                        className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105"
                         onClick={() =>
-                          navigate(`/student/upload-assignment/${id}`)
+                          navigate(
+                            `/student/${id}/assignment/${assignment._id}/upload`
+                          )
                         }
                       >
                         Upload

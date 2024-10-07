@@ -7,7 +7,7 @@ import importUserForm from "../controllers/formController.js";
 import { Semester } from "../models/sem.model.js";
 import {importTeacherForm,importTeacherCsv , importAdmin, getTeacher} from "../controllers/teachers_Admin/teacherAdminController.js";
 import { createCourse } from "../middlewares/courseCreation.js";
-import { submitAssignment, getSubmissions, createAssignment, getAllAssignments } from '../controllers/assignmentController.js';
+import { submitAssignment, getSubmissions, createAssignment, getAllAssignments,getOneAssignment } from '../controllers/assignmentController.js';
 import { updateStudentByRollno, getStudent } from "../controllers/studentController.js";
 
 const router = express.Router();
@@ -55,6 +55,7 @@ router.post('/create-course',createCourse);
 router.post('/create', createAssignment);
 //fetch assignment
 router.get('/assignments', getAllAssignments);
+router.get('/:assignmentId/assignment', getOneAssignment);
 
 // Configure multer for file uploads
 const uploadd = multer({ dest: 'uploads/assignments/' });
