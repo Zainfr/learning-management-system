@@ -1,17 +1,29 @@
 import fs from "fs"
 import path from "path"
+import { Student } from "../models/student.model.js";
 
 // Function to create student folders
-export const createStudentFolders = (student, subjects) => {
+export const createStudentFolders = async (student, subjects) => {
     const baseDir = path.join('.', 'public', 'uploads', student.rollno);
     const assignmentDir = path.join(baseDir, 'assignments');
 
     // Create base directory
     fs.mkdirSync(baseDir, { recursive: true });
 
+    const experimentEntries = [];
+
     // Create subject folders inside assignments
     subjects.forEach(subject => {
         fs.mkdirSync(path.join(assignmentDir, subject.name), { recursive: true });
+
+        experimentEntries.push({
+            subject: subject._id,
+            folder_path: path.join(assignmentDir, subject.name)
+        })
+    });
+
+    await Student.findByIdAndUpdate(student._id, {
+        $set: { experiments: experimentEntries },
     });
 
     // Return the paths (optional)

@@ -3,6 +3,7 @@ import { Semester } from '../models/sem.model.js';
 import { createStudentFolders } from "./folderController.js";
 import { assignMenteesToTeacher } from '../middlewares/assignMentee.js';
 import { Teacher } from "../models/teacher.models.js";
+// import { assignSubjectsToStudent } from "../middlewares/semOperations.js";
 
 const importUserForm = async (req, res) => {
   try {
@@ -26,6 +27,7 @@ const importUserForm = async (req, res) => {
     try {
       await newUser.save();
       createStudentFolders(newUser, semester.subjects);
+      // assignSubjectsToStudent(newUser._id, semester._id);
 
       console.log('Mentor (teacher ID):', mentor);  // Check mentor ID
       

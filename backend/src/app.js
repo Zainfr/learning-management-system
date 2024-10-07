@@ -9,6 +9,7 @@ import assignmentRoutes from './routes/userRoute.js'; // Import assignment route
 import path from 'path';
 import authRoute from "./routes/authRoute.js";
 import { Subject } from "./models/subjects.model.js";
+import driveRoute from "./routes/driveRoute.js";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.use('/', userRoute);
 app.use('/api/assignments', assignmentRoutes); // Add assignment routes
 app.use('/api/auth',authRoute);
+app.use('/api/drive',driveRoute);
 
 
 // to get the Teacher id for frontend.
