@@ -8,7 +8,10 @@ const Student = () => {
     <Routes>
       <Route path="/" element={<StudentDashboard />} />
       <Route path="assignments" element={<StudentExperiment />} />
-      <Route path="upload-assignment" element={<UploadAssignment />} />
+      <Route
+        path="assignment/:assignmentId/upload"
+        element={<UploadAssignment />}
+      />
     </Routes>
   );
 };

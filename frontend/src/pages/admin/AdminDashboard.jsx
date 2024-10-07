@@ -124,6 +124,7 @@ const AdminDashboard = () => {
       const response = await fetch(`http://localhost:3001/api/students`);
       const data = await response.json();
       setStudents(data.students);
+      setFilteredStudents(data.students);
       setNumberOfStudents(data.count);
     } catch (error) {
       console.error("Error fetching students:", error);
