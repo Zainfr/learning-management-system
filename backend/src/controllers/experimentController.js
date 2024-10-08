@@ -57,3 +57,31 @@ export const uploadExperimentFile = async (req, res) => {
         res.status(500).json({ success: false, message: "Error uploading file", error: error.message });
     }
 };
+
+export const getExperiments = async (req, res) => {
+    try {
+        const { rollno } = req.params;
+        if (!rollno) {
+            return res.status(400).json({ success: false, message: "Roll number is missing" });
+        }
+        const student = await Student.findOne({ rollno: rollno.toUpperCase() });
+        if (!student) {
+            return res.status(404).json({ success: false, message: "Student not found" });
+        }
+        
+        // Filter experiments to include only those with a filePath
+        const experimentsWithFiles = student.experiments.filter(exp => exp.filePath);
+
+        // Map the filtered experiments to include only necessary information
+        const experimentsData = experimentsWithFiles.map(exp => ({
+            _id: exp._id,
+            subject_name: exp.subject_name,
+            filePath: exp.filePath
+        }));
+
+        res.status(200).json({ success: true, experiments: experimentsData });
+    } catch (error) {
+        console.error("Error getting experiments:", error);
+        res.status(500).json({ success: false, message: "Error getting experiments", error: error.message });
+    }
+}
