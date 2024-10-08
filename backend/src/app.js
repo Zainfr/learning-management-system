@@ -25,7 +25,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static files for uploaded assignments
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/public/uploads', express.static(path.join(process.cwd(),'public','uploads')));
 
 // Routes
 app.use('/', userRoute);
