@@ -46,38 +46,45 @@ const UploadExperiment = () => {
     const subjectPath =
       student?.experiments[selectedExperimentIndex]?.folder_path;
     const subName = subjectPath.split("\\").pop();
-    console.log(subName);
+    const encodedSubName = encodeURIComponent(subName);
 
     const formData = new FormData();
-    formData.append("rollNo", student?.rollno);
+
     formData.append("file", uploadedFile);
+
+    formData.append("rollNo", student?.rollno);
 
     for (let [key, value] of formData.entries()) {
       console.log(key, value);
     }
 
     try {
+      console.log(
+        `Fetching: http://localhost:3001/upload/${student?.rollno}/${encodedSubName}`
+      );
+
       const response = await fetch(
-        `http://localhost:3001/upload/${student?.rollno}/${subName}`,
+        `http://localhost:3001/upload/${student?.rollno}/${encodedSubName}`,
         {
           method: "POST",
           body: formData,
         }
       );
 
-      // Log the response status and body
-      const responseBody = await response.text(); // Get response as text
-      console.log("Response Status:", response.status);
-      console.log("Response Body:", responseBody); // Log the body
+      const data = await response.json();
 
-      // Attempt to parse JSON
-      const data = JSON.parse(responseBody);
+      // // Log the response status and body
+      // const responseBody = await response.text(); // Get response as text
+      // console.log("Response Status:", response.status);
+      // console.log("Response Body:", responseBody); // Log the body
+
+      // // Attempt to parse JSON
+      // const data = JSON.parse(responseBody);
 
       if (response.ok) {
         setMessage(`Experiment Uploaded Successfully: ${data.fileName}`);
-      } else {
-        setMessage(`Error: ${data.message}`);
       }
+      console.log(data);
     } catch (error) {
       console.error("Error submitting experiment:", error);
       setMessage("Error submitting Experiment");

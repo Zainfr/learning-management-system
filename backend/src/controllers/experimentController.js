@@ -9,6 +9,8 @@ export const uploadExperimentFile = async (req, res) => {
         const { subject_name } = req.params;
         const file = req.file;
 
+        console.log(rollno, file, subject_name)
+
         if (!subject_name) {
             return res.status(400).json({ success: false, message: "Subject name is missing" });
         }
