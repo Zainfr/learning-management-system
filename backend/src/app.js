@@ -25,23 +25,25 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static files for uploaded assignments
-app.use('/public/uploads', express.static(path.join(process.cwd(),'public','uploads')));
+app.use('/uploads', express.static('uploads'));
+
+app.use('/public/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 
 // Routes
 app.use('/', userRoute);
 app.use('/api/assignments', assignmentRoutes); // Add assignment routes
-app.use('/api/auth',authRoute);
-app.use('/api/drive',driveRoute);
+app.use('/api/auth', authRoute);
+app.use('/api/drive', driveRoute);
 
 
 // to get the Teacher id for frontend.
-app.get('/api/teachers',async(req,res) => {
+app.get('/api/teachers', async (req, res) => {
   try {
     const teachers = await Teacher.find({});
     res.json(teachers)
   } catch (error) {
     console.error('Error Fetching the Teachers : error');
-    res.status(500).json({message: ' Internal Server Error'});
+    res.status(500).json({ message: ' Internal Server Error' });
   }
 })
 
@@ -56,13 +58,13 @@ app.get('/api/semesters', async (req, res) => {
   }
 });
 
-app.get('/api/subjects',async(req,res) => {
+app.get('/api/subjects', async (req, res) => {
   try {
     const subjects = await Subject.find({});
     res.json(subjects);
   } catch (error) {
-    console.error('Something Grave bad happened :',error);
-    res.status(500).json({message: 'Internal Server error'});
+    console.error('Something Grave bad happened :', error);
+    res.status(500).json({ message: 'Internal Server error' });
   }
 })
 
@@ -146,9 +148,10 @@ app.get('/api/courses', async (req, res) => {
   try {
     const count = await Course.countDocuments({});
     const courses = await Course.find()
-    res.json({ count,
+    res.json({
+      count,
       courses
-     });
+    });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

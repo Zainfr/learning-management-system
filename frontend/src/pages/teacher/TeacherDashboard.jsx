@@ -17,6 +17,9 @@ const TeacherDashboard = () => {
   const handleClick2 = () => {
     navigate(`/teacher/${id}/assignments`);
   };
+  const handleClick3 = () => {
+    navigate(`/teacher/${id}/experiments`);
+  };
 
   return (
     <div className="">
@@ -34,6 +37,13 @@ const TeacherDashboard = () => {
           subTitle="Submissions"
           onClick={handleClick2}
           header={header2}
+          className="w-80 h-fit hover:cursor-pointer transition-all duration-300 ease-in-out hover:p-2 m-8"
+        ></Card>
+        <Card
+          title="View Experiment"
+          subTitle="Experiment Submissions"
+          onClick={handleClick3}
+          header={header1}
           className="w-80 h-fit hover:cursor-pointer transition-all duration-300 ease-in-out hover:p-2 m-8"
         ></Card>
       </div>

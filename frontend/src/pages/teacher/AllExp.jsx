@@ -5,7 +5,7 @@ import Header from "../../components/Header";
 const ViewExperiments = () => {
     const [experiments, setExperiments] = useState([]);
     const [error, setError] = useState(null);
-    const { rollno } = useParams();
+    const { id, rollno } = useParams();
 
     useEffect(() => {
         const fetchExperiments = async () => {
@@ -31,7 +31,7 @@ const ViewExperiments = () => {
 
     return (
         <div>
-            <Header user="Student" />
+            <Header user="Teacher" />
             <div className="min-h-screen bg-gray-300 p-6">
 
                 {experiments.length === 0 ? (
@@ -76,7 +76,6 @@ const ViewExperiments = () => {
 
 // Function to handle file viewing
 const handleFileView = (filePath) => {
-    console.log(filePath)
     window.open(`http://localhost:3001${filePath}`, '_blank');
 };
 
