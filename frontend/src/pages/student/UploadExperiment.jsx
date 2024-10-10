@@ -20,6 +20,7 @@ const UploadExperiment = () => {
         }
         const data = await response.json();
         setStudent(data.student);
+        console.log("Fetched student data:", data.student); // Debug log
       } catch (error) {
         console.error("Error fetching Student:", error);
       }
@@ -40,56 +41,62 @@ const UploadExperiment = () => {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!uploadedFile) {
-      setMessage("Plaese Upload a file");
+      setMessage("Please upload a file");
       return;
     }
-    const subjectPath =
-      student?.experiments[selectedExperimentIndex]?.folder_path;
-    const subName = subjectPath.split("\\").pop();
-    const encodedSubName = encodeURIComponent(subName);
+    
+    const experiment = student?.experiments[selectedExperimentIndex];
+    console.log("Selected experiment:", experiment); // Debug log
+
+    if (!experiment) {
+      setMessage("No experiment selected");
+      return;
+    }
+
+    // Use folder_path to extract subject name
+    const folderPath = experiment.folder_path;
+    console.log("Folder path:", folderPath); // Debug log
+
+    const subjectName = folderPath.split('\\').pop();
+    console.log("Extracted subject name:", subjectName); // Debug log
+
+    if (!subjectName) {
+      setMessage("Unable to determine subject name");
+      return;
+    }
+
+    const encodedSubjectName = encodeURIComponent(subjectName);
 
     const formData = new FormData();
-
     formData.append("file", uploadedFile);
-
     formData.append("rollNo", student?.rollno);
 
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
     try {
-      console.log(
-        `Fetching: http://localhost:3001/upload/${student?.rollno}/${encodedSubName}`
-      );
+      const url = `http://localhost:3001/api/drive/upload/${student?.rollno}/${encodedSubjectName}`;
+      console.log("Request URL:", url); // Debug log
 
-      const response = await fetch(
-        `http://localhost:3001/upload/${student?.rollno}/${encodedSubName}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
       const data = await response.json();
+      console.log("Server response:", data); // Debug log
 
-      // // Log the response status and body
-      // const responseBody = await response.text(); // Get response as text
-      // console.log("Response Status:", response.status);
-      // console.log("Response Body:", responseBody); // Log the body
-
-      // // Attempt to parse JSON
-      // const data = JSON.parse(responseBody);
-
-      if (response.ok) {
-        setMessage(`Experiment Uploaded Successfully: ${data.fileName}`);
+      if (data.success) {
+        setMessage(`Experiment uploaded successfully: ${data.filePath}`);
+        // Optionally, update the student state here to reflect the new upload
+      } else {
+        setMessage(`Upload failed: ${data.message}`);
       }
-      console.log(data);
     } catch (error) {
       console.error("Error submitting experiment:", error);
-      setMessage("Error submitting Experiment");
+      setMessage(`Error submitting experiment: ${error.message}`);
     }
-    console.log("Uploading:", uploadedFile);
   };
 
   const handleCloseModal = () => {

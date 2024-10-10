@@ -38,6 +38,10 @@ const StudentDashboard = () => {
   const handleClick2 = () => {
     navigate(`/student/${id}/upload/${rollNo}`);
   };
+
+  const handleClick3 = () => {
+    navigate(`/student/${id}/experiments/${rollNo}`);
+  }
   return (
     <div>
       <Header user="Student" />
@@ -59,6 +63,13 @@ const StudentDashboard = () => {
             header={header2}
             className="w-80 h-fit hover:cursor-pointer transition-all duration-300 ease-in-out hover:p-2 my-8 ml-8 mr4"
           ></Card>
+          <Card
+            title="View Experiments"
+            subTitle="View files"
+            onClick={handleClick3}
+            header={header2}
+            className="w-80 h-fit hover:cursor-pointer transition-all duration-300 ease-in-out hover:p-2 my-8 ml-8 mr4">
+          </Card>
         </div>
       </div>
     </div>

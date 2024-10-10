@@ -1,15 +1,22 @@
 import { Student } from "../models/student.model.js";
-import {upload} from "../middlewares/multer.js";
+import { upload } from "../middlewares/multer.js";
 import path from "path";
 
 export const uploadExperimentFile = async (req, res) => {
-
     try {
-        const { rollno } = req.body;
+        // Log the request body to check if rollno is being passed correctly
+        console.log("Request body:", req.body);
+        const rollno = req.body.rollno || req.body.rollNo;
         const { subject_name } = req.params;
         const file = req.file;
 
-        console.log(rollno, file, subject_name)
+        // Log the parameters to make sure they are coming through
+        console.log("Roll number:", rollno, "File:", file, "Subject name:", subject_name);
+
+        // Check if the required fields are present
+        if (!rollno) {
+            return res.status(400).json({ success: false, message: "Roll number is missing" });
+        }
 
         if (!subject_name) {
             return res.status(400).json({ success: false, message: "Subject name is missing" });
@@ -63,10 +70,15 @@ export const uploadExperimentFile = async (req, res) => {
 export const getExperiments = async (req, res) => {
     try {
         const { rollno } = req.params;
+
+        // Check if rollno is provided
         if (!rollno) {
             return res.status(400).json({ success: false, message: "Roll number is missing" });
         }
+
         const student = await Student.findOne({ rollno: rollno.toUpperCase() });
+
+        // Check if the student is found
         if (!student) {
             return res.status(404).json({ success: false, message: "Student not found" });
         }
