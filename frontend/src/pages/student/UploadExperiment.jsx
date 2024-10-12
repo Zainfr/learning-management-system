@@ -57,7 +57,9 @@ const UploadExperiment = () => {
     const folderPath = experiment.folder_path;
     console.log("Folder path:", folderPath); // Debug log
 
-    const subjectName = folderPath.split('\\').pop();
+    const subjectName = folderPath.split('/').pop();
+    const encodedSubjectName = encodeURIComponent(subjectName);
+
     console.log("Extracted subject name:", subjectName); // Debug log
 
     if (!subjectName) {
@@ -65,7 +67,6 @@ const UploadExperiment = () => {
       return;
     }
 
-    const encodedSubjectName = encodeURIComponent(subjectName);
 
     const formData = new FormData();
     formData.append("file", uploadedFile);
@@ -121,7 +122,7 @@ const UploadExperiment = () => {
                       Folder: {index + 1}
                     </p>
                     <p className="text-sm text-gray-700 truncate break-all">
-                      {experiment.folder_path.split("\\").pop()}
+                      {experiment.folder_path.split("/").pop()}
                     </p>
                   </div>
                   <div className="mt-4 text-sm text-right">

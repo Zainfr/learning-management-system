@@ -6,7 +6,7 @@ export const uploadExperimentFile = async (req, res) => {
     try {
         // Log the request body to check if rollno is being passed correctly
         console.log("Request body:", req.body);
-        const rollno = req.body.rollno || req.body.rollNo;
+        const rollno = req.body.rollno?.toUpperCase() || req.body.rollNo?.toUpperCase();
         const { subject_name } = req.params;
         const file = req.file;
 
