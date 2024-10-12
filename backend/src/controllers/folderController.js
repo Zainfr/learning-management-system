@@ -4,32 +4,23 @@ import { Student } from "../models/student.model.js";
 
 // Function to create student folders
 export const createStudentFolders = async (student, subjects) => {
-    const baseDir = path.join('.', 'public', 'uploads', student.rollno);
+    const baseDir = path.join('.', 'public', 'uploads', student.rollno.toUpperCase());
     const assignmentDir = path.join(baseDir, 'assignments');
 
-    // Create base directory
+    // Create directories
     fs.mkdirSync(baseDir, { recursive: true });
 
-    const experimentEntries = [];
+    const experimentEntries = subjects.map(subject => ({
+        subject_name: subject.name,  // Save name instead of ObjectId
+        folder_path: path.join(assignmentDir, subject.name),
+    }));
 
-    // Create subject folders inside assignments
-    subjects.forEach(subject => {
-        fs.mkdirSync(path.join(assignmentDir, subject.name), { recursive: true });
-
-        experimentEntries.push({
-            subject: subject._id,
-            folder_path: path.join(assignmentDir, subject.name)
-        })
-    });
-
+    // Save the experiment entries to the student in the database
     await Student.findByIdAndUpdate(student._id, {
         $set: { experiments: experimentEntries },
     });
 
-    // Return the paths (optional)
-    return {
-        assignmentFolderPath: assignmentDir,
-    };
+    return { assignmentFolderPath: assignmentDir };
 };
 
 export const createTeacherFolder = async (teacher, subjects) => {
