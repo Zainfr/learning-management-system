@@ -1,6 +1,7 @@
 import express from 'express';
 import { verifyToken } from '../middlewares/verifyToken.js';
 import { login } from '../middlewares/auth.js';
+import { forgetPassword,requestOtp } from '../middlewares/forgetPassword.js';
 
 const router = express.Router();
 
@@ -28,4 +29,7 @@ router.get('/student/:id',verifyToken, (req,res) => {
     res.json({message : 'Welcome Student'});
 })
 
+router.post('/forgot-password/request-otp', requestOtp);
+
+router.post('/forgot-password/reset', forgetPassword);
 export default router;
