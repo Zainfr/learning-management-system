@@ -4,6 +4,8 @@ import Papa from "papaparse";
 import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
+import { MultiSelect } from 'primereact/multiselect';
+
 
 const CreateTeacher = () => {
   const [students, setStudents] = useState([]);
@@ -16,7 +18,6 @@ const CreateTeacher = () => {
     email: "",
     password: "",
     mobile: "",
-    mentees: "",
   });
 
   const [file, setFile] = useState(null);
@@ -73,9 +74,10 @@ const CreateTeacher = () => {
   const handleDropdownChange1 = (e) => {
     setFormData({
       ...formData,
-      subjects: e.value, // e.value holds the selected subject's _id
+      subjects: e.value, // e.value will now be an array of selected subjects
     });
   };
+  
 
   const handleDropdownChange2 = (e) => {
     setFormData({
@@ -126,27 +128,34 @@ const CreateTeacher = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.subjects) {
-      alert("Please select a subject");
+    
+    if (!formData.subjects || formData.subjects.length === 0) {
+      setMessage("Please select at least one subject.");
       return;
     }
-
-    // Handle form submission logic here
+  
     try {
-      const response = await fetch(
-        `http://localhost:3001/teacher-form-submit`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`http://localhost:3001/teacher-form-submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(data.msg || "Teacher created successfully!");
+      } else {
+        setMessage(data.msg || "Failed to create teacher.");
+      }
     } catch (error) {
-      console.log("", error);
+      console.error("Error creating teacher:", error);
+      setMessage("An error occurred. Please try again.");
     }
   };
+  
+
 
   return (
     <div className="flex">
@@ -188,19 +197,19 @@ const CreateTeacher = () => {
                 Subject
               </label>
               <div className="mb-8">
-                <Dropdown
+                <MultiSelect
                   id="subject"
                   name="subjects"
-                  value={formData.subjects} // Ensure this points to the correct state
+                  value={formData.subjects} // Array of selected subjects
                   options={subjectOptions}
-                  onChange={handleDropdownChange1} // Use the new handleDropdownChange function
-                  placeholder="Select Subject"
-                  className={`w-full border-2 ${
-                    isFocused ? "border-indigo-500" : "border-gray-300"
-                  } rounded-md`}
+                  onChange={handleDropdownChange1}
+                  placeholder="Select Subjects"
+                  className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
+                    } rounded-md`}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                 />
+
               </div>
 
               <div className="mb-8">
@@ -250,21 +259,6 @@ const CreateTeacher = () => {
                     Mobile No.
                   </label>
                 </FloatLabel>
-              </div>
-              <div className="mb-8">
-                <Dropdown
-                  id="mentees"
-                  name="mentees"
-                  value={formData.mentees} // Ensure this points to the correct state
-                  options={studentOptions}
-                  onChange={handleDropdownChange2} // Use the new handleDropdownChange function
-                  placeholder="Select mentees"
-                  className={`w-full border-2 ${
-                    isFocused ? "border-indigo-500" : "border-gray-300"
-                  } rounded-md`}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                />
               </div>
               <button
                 type="submit"
