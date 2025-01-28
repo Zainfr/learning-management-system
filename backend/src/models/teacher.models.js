@@ -1,6 +1,21 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
+const studyMaterialSchema = new mongoose.Schema({
+    subject_name: {
+        type: String,  // Change this to String instead of ObjectId
+        required: true,
+    },
+    folder_path: {
+        type: String,
+        required: false,
+    },
+    filePath: {
+        type: String,
+        required: false,
+    }
+}, { timestamps: true })
+
 const teacherSchema = new mongoose.Schema({
     teacher_name: {
         type: String,
@@ -25,6 +40,7 @@ const teacherSchema = new mongoose.Schema({
         type : mongoose.Schema.ObjectId,
         ref : "Subjects",
     }],
+    study_material :[studyMaterialSchema],
     mentees : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Student",
