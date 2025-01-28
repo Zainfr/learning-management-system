@@ -38,7 +38,7 @@ export const uploadStudyMaterial = async (req, res) => {
         if (!teacher.study_material) {
             teacher.study_material = [];
         }
-        
+
         teacher.study_material.push({
             subject_name: teacher_subject_name,
             filePath: filePath,
@@ -52,3 +52,31 @@ export const uploadStudyMaterial = async (req, res) => {
         res.status(500).json({ success: false, message: "Error uploading file", error: error.message });
     }
 };
+
+export const getStudyMaterial = async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        if (!email)
+            return res.status(400).json({ success: false, message: "Faculty email not found" })
+
+        const teacher = await Teacher.findOne({ email: email });
+
+        if (!teacher)
+            return res.status(404).json({ success: false, message: "Teacher not found" })
+
+        const materialWithFiles = teacher.study_material.filter(mats => mats.filePath);
+
+        const materialData = materialWithFiles.map(mats => ({
+            _id: mats._id,
+            subject_name: mats.subject_name,
+            filePath: mats.filePath
+        }))
+
+        res.status(200).json({ success: true, materials: materialData })
+
+    } catch (error) {
+        console.error("Error getting Study Materials:", error);
+        res.status(500).json({ success: false, message: "Error getting Study Materials", error: error.message });
+    }
+}
