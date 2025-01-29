@@ -1,4 +1,5 @@
 import { Student } from "../models/student.model.js";
+import { Teacher } from "../models/teacher.models.js";
 import { upload } from "../middlewares/multer.js";
 import path from "path";
 
@@ -31,12 +32,12 @@ export const uploadExperimentFile = async (req, res) => {
 
         // Update the student document
         const result = await Student.updateOne(
-            { 
+            {
                 rollno: rollno.toUpperCase(),
-                "experiments.subject_name": subject_name 
+                "experiments.subject_name": subject_name
             },
-            { 
-                $set: { 
+            {
+                $set: {
                     "experiments.$.folder_path": path.dirname(filePath),
                     "experiments.$.filePath": filePath
                 }
@@ -48,8 +49,8 @@ export const uploadExperimentFile = async (req, res) => {
             // Add a new experiment
             await Student.updateOne(
                 { rollno: rollno.toUpperCase() },
-                { 
-                    $push: { 
+                {
+                    $push: {
                         experiments: {
                             subject_name: subject_name,
                             folder_path: path.dirname(filePath),
@@ -82,7 +83,7 @@ export const getExperiments = async (req, res) => {
         if (!student) {
             return res.status(404).json({ success: false, message: "Student not found" });
         }
-        
+
         // Filter experiments to include only those with a filePath
         const experimentsWithFiles = student.experiments.filter(exp => exp.filePath);
 

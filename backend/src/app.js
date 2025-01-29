@@ -5,7 +5,7 @@ import { Student } from "./models/student.model.js";
 import { Teacher } from "./models/teacher.models.js";
 import { Semester } from "./models/sem.model.js";
 import { Course } from "./models/course.model.js";
-import assignmentRoutes from './routes/userRoute.js'; // Import assignment routes
+import assignmentRoutes from './routes/userRoute.js';
 import path from 'path';
 import authRoute from "./routes/authRoute.js";
 import { Subject } from "./models/subjects.model.js";
@@ -23,6 +23,7 @@ app.use(cors(corsOptions));
 
 // Express JSON middleware
 app.use(express.json());
+app.use(express.urlencoded({extended: false}))
 
 // Serve static files for uploaded assignments
 app.use('/uploads', express.static('uploads'));
