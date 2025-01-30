@@ -73,7 +73,7 @@ const UploadExperiment = () => {
     formData.append("rollNo", student?.rollno);
 
     try {
-      const url = `http://localhost:3001/api/drive/upload/${student?.rollno}/${encodedSubjectName}`;
+      const url = `http://localhost:3001/api/drive/student/upload/${student?.rollno}/${encodedSubjectName}`;
       console.log("Request URL:", url); // Debug log
 
       const response = await fetch(url, {
