@@ -1,6 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import {v4 as uuid} from "uuid"
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -16,8 +17,8 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null,`${Date.now()}${ext}`);
+    const uniqueSuffix = `${Date.now()}-${uuid()}`
+    cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
 
