@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import logo from "../assets/aiktc-logo.png"; // Update the path to your logo
-import { FaBars } from "react-icons/fa"; // FontAwesome icon for menu
+import { FaBars } from "react-icons/fa";
+import { FaHome, FaBook, FaUserGraduate, FaChalkboardTeacher } from "react-icons/fa";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to control sidebar visibility on mobile
@@ -21,13 +22,16 @@ const SideBar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed h-full bg-gradient-to-r from-violet-600 to-indigo-600 text-gray-400 border-solid border-r-2 border-gray-400 transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:relative`}
+        className={`fixed h-full bg-[#0066b2] text-gray-400 border-solid border-r-2 border-gray-400 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:relative`}
       >
-        <div className="flex pt-2 justify-center border-b-2 y-900">
+        <div className="flex pt-3 justify-center border-b-2 border-gray-400">
           <img src={logo} alt="Logo" width={"48px"} className="mb-4 md:mb-7" />
-          <h1 className="text-xl text-white font-bold pt-3">Admin Panel</h1>
+          <div>
+
+            <h2 className="text-xl text-white px-4 pt-2">Admin Panel</h2>
+            <h2 className="text-[12px] text-gray-300 px-4">maviya@admin.com</h2>
+          </div>
         </div>
         <div className="p-6">
           <nav>
@@ -35,49 +39,53 @@ const SideBar = () => {
               <li className="mb-4">
                 <Link
                   to={`/admin/${id}`}
-                  className={`text-lg p-2 block rounded no-underline ${
-                    isActive("/admin")
-                      ? "bg-white  text-gray-900  border-2 border-white"
-                      : "text-gray-300 hover:bg-gray-700"
-                  }`}
+                  className={`flex text-lg p-2 rounded no-underline ${isActive("/admin")
+                    ? "bg-white  text-gray-900  border-2 border-white"
+                    : "text-gray-100 hover:bg-[#002D62]"
+                    }`}
                 >
-                  Dashboard
+                  <FaHome size={24} className="" />
+
+                  <p className="pl-4">Dashboard</p>
                 </Link>
               </li>
               <li className="mb-4">
                 <Link
                   to={`/admin/${id}/createCourse`}
-                  className={`text-lg p-2 block rounded no-underline ${
-                    isActive("/admin/createCourse")
-                      ? "bg-white text-gray-900  border-2 border-white"
-                      : "text-gray-300 hover:bg-gray-700"
-                  }`}
+                  className={`text-lg p-2 flex rounded no-underline ${isActive("/admin/createCourse")
+                    ? "bg-white text-gray-900  border-2 border-white"
+                    : "text-gray-100 hover:bg-[#002D62]"
+                    }`}
                 >
-                  Create Course
+                  <FaBook size={24} className="p-[2px]" />
+
+                  <p className="pl-4">Create Course</p>
                 </Link>
               </li>
               <li className="mb-4">
                 <Link
                   to={`/admin/${id}/createStudent`}
-                  className={`text-lg p-2 block rounded no-underline ${
-                    isActive("/admin/createStudent")
-                      ? "bg-white text-gray-900  border-2 border-white"
-                      : "text-gray-300 hover:bg-gray-700"
-                  }`}
+                  className={`text-lg p-2 flex rounded no-underline ${isActive("/admin/createStudent")
+                    ? "bg-white text-gray-900  border-2 border-white"
+                    : "text-gray-100 hover:bg-[#002D62]"
+                    }`}
                 >
-                  Create Student
+                  <FaUserGraduate size={24} className="p-[2px]" />
+
+                  <p className="pl-4">Create Student</p>
                 </Link>
               </li>
               <li className="mb-4">
                 <Link
                   to={`/admin/${id}/createTeacher`}
-                  className={`text-lg p-2 block rounded no-underline ${
-                    isActive("/admin/createTeacher")
-                      ? "bg-white text-gray-900  border-2 border-white"
-                      : "text-gray-300 hover:bg-gray-700"
-                  }`}
+                  className={`text-lg p-2 flex rounded no-underline ${isActive("/admin/createTeacher")
+                    ? "bg-white text-gray-900  border-2 border-white"
+                    : "text-gray-100 hover:bg-[#002D62]"
+                    }`}
                 >
-                  Create Teacher
+                  <FaChalkboardTeacher size={24} className="" />
+
+                  <p className="pl-4">Create Teacher</p>
                 </Link>
               </li>
             </ul>

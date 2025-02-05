@@ -328,9 +328,8 @@ const AdminDashboard = () => {
                 options={semesterOptions}
                 onChange={handleSemesterChange}
                 placeholder="Select Semester"
-                className={`w-full border-2 ${
-                  isFocused ? "border-indigo-500" : "border-gray-300"
-                } rounded-md`}
+                className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
+                  } rounded-md`}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
               />
@@ -447,9 +446,8 @@ const AdminDashboard = () => {
                 options={semesterOptions}
                 onChange={handleCourseChange}
                 placeholder="Select Semester"
-                className={`w-full border-2 ${
-                  isFocused ? "border-indigo-500" : "border-gray-300"
-                } rounded-md`}
+                className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
+                  } rounded-md`}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
               />

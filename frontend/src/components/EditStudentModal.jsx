@@ -94,10 +94,10 @@ const EditStudentModal = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: 1, scale: 0.8 }}
         exit={{ opacity: 0, scale: 0.5 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-white p-6 rounded-lg shadow-lg w-1/3 relative"
+        className="bg-white p-6 rounded-lg shadow-lg w-1/3 h-fit relative top-10"
       >
         {/* Close Button */}
         <button
@@ -169,9 +169,8 @@ const EditStudentModal = ({
               options={semesterOptions}
               onChange={handleChange}
               placeholder="Select Semester"
-              className={`w-full border-2 ${
-                isFocused ? "border-indigo-500" : "border-gray-300"
-              } rounded-md`}
+              className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
+                } rounded-md`}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
@@ -187,9 +186,8 @@ const EditStudentModal = ({
               options={teacherOptions}
               onChange={handleChange}
               placeholder="Select Mentor"
-              className={`w-full border-2 ${
-                isFocused ? "border-indigo-500" : "border-gray-300"
-              } rounded-md`}
+              className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
+                } rounded-md`}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
