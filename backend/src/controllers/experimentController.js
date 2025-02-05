@@ -1,11 +1,8 @@
 import { Student } from "../models/student.model.js";
-import { upload } from "../middlewares/multer.js";
 import path from "path";
 
 export const uploadExperimentFile = async (req, res) => {
     try {
-        // Log the request body to check if rollno is being passed correctly
-        console.log("Request body:", req.body);
         const rollno = req.body.rollno?.toUpperCase() || req.body.rollNo?.toUpperCase();
         const { subject_name } = req.params;
         const file = req.file;
@@ -29,36 +26,20 @@ export const uploadExperimentFile = async (req, res) => {
         // Prepare the new file path
         const filePath = path.join("/public/uploads", rollno.toUpperCase(), "assignments", subject_name, file.filename);
 
-        // Update the student document
-        const result = await Student.updateOne(
-            { 
-                rollno: rollno.toUpperCase(),
-                "experiments.subject_name": subject_name 
-            },
-            { 
-                $set: { 
-                    "experiments.$.folder_path": path.dirname(filePath),
-                    "experiments.$.filePath": filePath
-                }
-            }
-        );
+        const student = await Student.findOne({ rollno });
 
-        // If no document was modified, it means the experiment doesn't exist yet
-        if (result.modifiedCount === 0) {
-            // Add a new experiment
-            await Student.updateOne(
-                { rollno: rollno.toUpperCase() },
-                { 
-                    $push: { 
-                        experiments: {
-                            subject_name: subject_name,
-                            folder_path: path.dirname(filePath),
-                            filePath: filePath
-                        }
-                    }
-                }
-            );
+        if(!student)
+            return res.status(404).json({success: false,message:"Student not found"})
+
+        if(!student.experiments){
+            student.experiments = []
         }
+        student.experiments.push({
+            subject_name : subject_name,
+            filePath : filePath
+        })
+
+        await student.save();;
 
         res.status(200).json({ success: true, message: "File uploaded successfully", filePath });
     } catch (error) {
@@ -82,7 +63,7 @@ export const getExperiments = async (req, res) => {
         if (!student) {
             return res.status(404).json({ success: false, message: "Student not found" });
         }
-        
+
         // Filter experiments to include only those with a filePath
         const experimentsWithFiles = student.experiments.filter(exp => exp.filePath);
 
