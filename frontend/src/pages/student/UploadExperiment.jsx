@@ -53,19 +53,21 @@ const UploadExperiment = () => {
       return;
     }
 
-    // Use folder_path to extract subject name
-    const folderPath = experiment.folder_path;
-    console.log("Folder path:", folderPath); // Debug log
+    
+    const encodedSubjectName = encodeURIComponent(experiment.subject_name);
 
-    const subjectName = folderPath.split('/').pop();
-    const encodedSubjectName = encodeURIComponent(subjectName);
+    // // Use folder_path to extract subject name
+    // const folderPath = experiment;
+    // console.log("Folder path:", folderPath); // Debug log
 
-    console.log("Extracted subject name:", subjectName); // Debug log
+    // const subjectName = folderPath.split('/').pop();
+    // const encodedSubjectName = encodeURIComponent(subjectName);
 
-    if (!subjectName) {
-      setMessage("Unable to determine subject name");
-      return;
-    }
+
+    // if (!subjectName) {
+    //   setMessage("Unable to determine subject name");
+    //   return;
+    // }q
 
 
     const formData = new FormData();
@@ -122,7 +124,7 @@ const UploadExperiment = () => {
                       Folder: {index + 1}
                     </p>
                     <p className="text-sm text-gray-700 truncate break-all">
-                      {experiment.folder_path.split("/").pop()}
+                      {experiment.subject_name}
                     </p>
                   </div>
                   <div className="mt-4 text-sm text-right">
