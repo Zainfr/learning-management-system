@@ -8,3 +8,15 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.folder {
+    position: relative;
+    padding-top: 2rem;
+  }
+  
+  .folder-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-50%);
+  }

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion"; // Import Framer Motion
+import StudentSidebar from "../../components/StudentSidebar";
 
 const UploadExperiment = () => {
   const [student, setStudent] = useState({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -107,29 +109,44 @@ const UploadExperiment = () => {
   };
 
   return (
-    <div>
-      <Header user="Student" />
-      <div className="flex justify-center items-center">
-        <div className="max-w-5xl mx-auto p-4 flex flex-col justify-center items-center">
-          <h2 className="text-2xl font-bold mb-4">Upload Experiment</h2>
+    <div className="h-screen flex flex-col">
+      <div className="sticky top-0 left-0 right-0 z-20">
+        <Header user="Student" />
+      </div>
+      <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
+    <div className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
+      <StudentSidebar userName={student?.name} rollNo={student?.rollno}/>
+    </div>
+        <div className="max-w-5xl ml-6 p-4 flex flex-col">
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Upload Experiment</h2>
           {student?.experiments?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
               {student?.experiments?.map((experiment, index) => (
                 <div
                   key={index}
-                  className="bg-blue-100 shadow-md rounded-lg p-6 hover:bg-blue-200 transition transform hover:scale-95 flex flex-col justify-between"
+                  className="bg-blue-100 shadow-md rounded-lg p-6 hover:bg-blue-200 transition transform hover:scale-95 flex flex-col justify-between folder relative"
                 >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute inset-0 w-full h-full text-blue-900 opacity-10"
+                    fill="currentColor"
+                    viewBox="0 0 12 12"
+                  >
+                    <path
+                      d="M3 7h4l2 2h10a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
+                    />
+                  </svg>
                   <div>
-                    <p className="text-lg font-semibold text-blue-900 mb-2">
+                    <p className="text-lg font-semibold text-blue-900 mb-2 relative z-10">
                       Folder: {index + 1}
                     </p>
-                    <p className="text-sm text-gray-700 truncate break-all">
+                    <p className="text-sm text-gray-700 truncate break-all relative z-10">
                       {experiment.subject_name}
                     </p>
                   </div>
-                  <div className="mt-4 text-sm text-right">
+                  <div className="mt-4 text-sm relative z-10">
                     <button
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-white hover:text-gray-800 bg-blue-600 hover:bg-blue-400 px-4 py-2 rounded"
                       onClick={() => handleUploadClick(index)}
                     >
                       Upload File

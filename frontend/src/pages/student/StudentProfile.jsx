@@ -60,7 +60,7 @@ const StudentProfile = ({ onLogout, user }) => {
     setIsVisible(false);
   };
   return (
-    <div className="max-w-sm mx-auto bg-white shadow-lg overflow-hidden rounded-2xl p-3">
+    <div className="absolute max-w-sm mx-auto bg-white shadow-lg overflow-hidden rounded-2xl p-3">
       <div className="flex flex-col items-center p-6">
         <img
           src="https://via.placeholder.com/100"
