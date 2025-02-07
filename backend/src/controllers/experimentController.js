@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Student } from "../models/student.model.js";
 import path from "path";
 
@@ -28,15 +29,15 @@ export const uploadExperimentFile = async (req, res) => {
 
         const student = await Student.findOne({ rollno });
 
-        if(!student)
-            return res.status(404).json({success: false,message:"Student not found"})
+        if (!student)
+            return res.status(404).json({ success: false, message: "Student not found" })
 
-        if(!student.experiments){
+        if (!student.experiments) {
             student.experiments = []
         }
         student.experiments.push({
-            subject_name : subject_name,
-            filePath : filePath
+            subject_name: subject_name,
+            filePath: filePath
         })
 
         await student.save();;
@@ -78,5 +79,45 @@ export const getExperiments = async (req, res) => {
     } catch (error) {
         console.error("Error getting experiments:", error);
         res.status(500).json({ success: false, message: "Error getting experiments", error: error.message });
+    }
+}
+
+export const getExperimentsBySubject = async (req, res) => {
+    try {
+        const { studentId, subject_name } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(studentId)) {
+            return res.status(400).json({ success: false, message: "Invalid Student Id" })
+        }
+        if (!subject_name || typeof subject_name !== 'string') {
+            return res.status(400).json({ success: false, message: "Valid subject name is required" })
+        }
+
+        const student = await Student.findById(studentId);
+
+        if (!student)
+            return res.status(404).json({ success: false, message: "student not found" })
+
+        const experiments = student.experiments.filter(exp =>
+            exp.subject_name == subject_name && exp.filePath
+        );
+
+        if (experiments.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No experiments found for this subject"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            experiments
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error fetching experiments",
+            error: error.message
+        });
     }
 }

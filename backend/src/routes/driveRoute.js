@@ -2,7 +2,7 @@
 import express from "express";
 import { upload } from "../middlewares/multer.js";  // Correct import of multer
 import { teacherUpload } from "../middlewares/teacherMulter.js";
-import { uploadExperimentFile, getExperiments } from "../controllers/experimentController.js";
+import { uploadExperimentFile, getExperiments, getExperimentsBySubject } from "../controllers/experimentController.js";
 import { uploadStudyMaterial ,getStudyMaterial} from "../controllers/studyMaterialController.js";
 
 const router = express.Router();
@@ -15,5 +15,6 @@ router.post("/teacher/upload/:teacher_name/:teacher_subject_name", teacherUpload
 //Route to get all experiments for a student
 router.get("/experiments/:rollno", getExperiments);
 router.get("/materials/:email",getStudyMaterial)
+router.get("/subject/:studentId/experiments/:subject_name",getExperimentsBySubject)
 
 export default router;
