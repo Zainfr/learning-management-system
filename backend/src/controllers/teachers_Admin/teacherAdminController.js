@@ -139,7 +139,7 @@ export const importAdmin = async (req, res) => {
 
 export const getTeacher = async (req, res) => {
   try {
-    const teacher = await Teacher.findById(req.params.id);
+    const teacher = await Teacher.findById(req.params.id).populate('subjects').exec(); 
 
     if (!teacher) {
       return res.status(404).json({ message: 'Teacher not found' });

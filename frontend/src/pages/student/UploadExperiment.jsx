@@ -46,7 +46,7 @@ const UploadExperiment = () => {
       setMessage("Please upload a file");
       return;
     }
-    
+
     const experiment = student?.experiments[selectedExperimentIndex];
     console.log("Selected experiment:", experiment); // Debug log
 
@@ -55,7 +55,6 @@ const UploadExperiment = () => {
       return;
     }
 
-    
     const encodedSubjectName = encodeURIComponent(experiment.subject_name);
 
     // // Use folder_path to extract subject name
@@ -65,12 +64,10 @@ const UploadExperiment = () => {
     // const subjectName = folderPath.split('/').pop();
     // const encodedSubjectName = encodeURIComponent(subjectName);
 
-
     // if (!subjectName) {
     //   setMessage("Unable to determine subject name");
     //   return;
     // }q
-
 
     const formData = new FormData();
     formData.append("file", uploadedFile);
@@ -114,11 +111,17 @@ const UploadExperiment = () => {
         <Header user="Student" />
       </div>
       <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
-    <div className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
-      <StudentSidebar userName={student?.name} rollNo={student?.rollno}/>
-    </div>
+        <div
+          className={`h-full bg-blue-800 transition-all duration-300 ${
+            isSidebarOpen ? "w-64" : "w-16"
+          }`}
+        >
+          <StudentSidebar userName={student?.name} rollNo={student?.rollno} />
+        </div>
         <div className="max-w-5xl ml-6 p-4 flex flex-col">
-          <h2 className="text-2xl font-bold text-blue-900 mb-4">Upload Experiment</h2>
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">
+            Upload Experiment
+          </h2>
           {student?.experiments?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
               {student?.experiments?.map((experiment, index) => (
@@ -132,9 +135,7 @@ const UploadExperiment = () => {
                     fill="currentColor"
                     viewBox="0 0 12 12"
                   >
-                    <path
-                      d="M3 7h4l2 2h10a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
-                    />
+                    <path d="M3 7h4l2 2h10a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
                   </svg>
                   <div>
                     <p className="text-lg font-semibold text-blue-900 mb-2 relative z-10">

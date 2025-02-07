@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import TeacherSidebar from "../../components/TeacherSidebar";
 
 import { Calendar } from "primereact/calendar";
 
@@ -11,6 +12,7 @@ import Header from "../../components/Header";
 const CreateAssignment = () => {
   const [teachera, setTeacher] = useState({});
   const [subjects, setSubjects] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const teacherId = teachera.teacher?._id;
   const [assignment, setAssignment] = useState({
     subjectId: "",
@@ -19,9 +21,9 @@ const CreateAssignment = () => {
     description: "",
     dueDate: Date,
   });
-  const subjectOptions = subjects.map((subjects) => ({
-    label: subjects.name,
-    value: subjects._id,
+  const subjectOptions = teachera.teacher?.subjects.map((subject) => ({
+    label: subject.name,
+    value: subject._id,
   }));
   const { id } = useParams();
   const [message, setMessage] = useState("");
@@ -120,98 +122,137 @@ const CreateAssignment = () => {
   };
 
   return (
-    <div className="absolute left-0 right-0 bg-gray-200 h-full">
-      <Header user="Teacher" />
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 mt-12">
-        <h2 className="text-xl font-semibold mb-4">Upload Assignment</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mt-8 mb-4">
-            <FloatLabel>
-              <InputText
-                id="title"
-                type="text"
-                name="title"
-                value={assignment.title}
-                onChange={handleChange}
-                className="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <label htmlFor="title" className="block text-gray-700 mb-2">
-                Assignment Title
-              </label>
-            </FloatLabel>
-          </div>
-          <div className="mb-8">
-            <label htmlFor="teacher" className="block text-gray-700 mb-2">
-              Teacher
-            </label>
-            <input
-              value={teachera.teacher?.teacher_name || "Error"}
-              type="text"
-              className="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="sticky top-0 left-0 right-0 z-20">
+        <Header user="Teacher" />
+      </div>
 
-          <div className="mb-8">
-            <Dropdown
-              id="subject"
-              name="subjects"
-              value={assignment.subjectId} // Ensure this points to the correct state
-              options={subjectOptions}
-              onChange={handleDropdownChange1} // Use the new handleDropdownChange function
-              placeholder="Select Subject"
-              className={`w-full border-2 ${
-                isFocused ? "border-indigo-500" : "border-gray-300"
-              } rounded-md`}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-            />
-          </div>
+      <div className="flex flex-1 h-[calc(100vh-64px)]">
+        {/* Sidebar */}
+        <div
+          className={`h-full bg-blue-800 transition-all duration-300 ${
+            isSidebarOpen ? "w-64" : "w-16"
+          }`}
+        >
+          <TeacherSidebar
+            userName={teachera?.teacher?.teacher_name}
+            rollNo={teachera?.teacher?.email}
+          />
+        </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows="4"
-              onChange={handleChange}
-              value={assignment.description}
-              className="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter description here"
-            />
-          </div>
+        {/* Main Content */}
+        <div className="flex-1 p-8 overflow-y-auto">
+          <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-8">
+              Create Assignment
+            </h2>
 
-          <div className="mb-4">
-            <label
-              htmlFor="due_date"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Due Datea
-            </label>
-            <Calendar
-              id="due_date"
-              value={assignment.dueDate}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
-              dateFormat="dd-mm-yy" // Example format, you can customize
-              showIcon // To display a calendar icon next to the input
-            />
-          </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Title Input */}
+              <div className="space-y-2">
+                <FloatLabel>
+                  <InputText
+                    id="title"
+                    type="text"
+                    name="title"
+                    value={assignment.title}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <label htmlFor="title" className="text-gray-600">
+                    Assignment Title
+                  </label>
+                </FloatLabel>
+              </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white rounded-lg py-2 hover:bg-blue-600 focus:outline-none"
-          >
-            Upload Assignment
-          </button>
-          {message && (
-            <p className="mt-4 font-semibold text-green-500">{message}</p>
-          )}
-        </form>
+              {/* Teacher Input */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="teacher"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Teacher
+                </label>
+                <input
+                  value={teachera.teacher?.teacher_name || "Error"}
+                  type="text"
+                  readOnly
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-500"
+                />
+              </div>
+
+              {/* Subject Dropdown */}
+              <div className="space-y-2">
+                <Dropdown
+                  id="subject"
+                  name="subjects"
+                  value={assignment.subjectId}
+                  options={subjectOptions}
+                  onChange={handleDropdownChange1}
+                  placeholder="Select Subject"
+                  className={`w-full border ${
+                    isFocused ? "border-blue-500" : "border-gray-200"
+                  } rounded-lg`}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                />
+              </div>
+
+              {/* Description Textarea */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  rows="4"
+                  onChange={handleChange}
+                  value={assignment.description}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  placeholder="Enter description here"
+                />
+              </div>
+
+              {/* Due Date Calendar */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="due_date"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Due Date
+                </label>
+                <Calendar
+                  id="due_date"
+                  value={assignment.dueDate}
+                  onChange={handleChange}
+                  className="w-full"
+                  dateFormat="dd-mm-yy"
+                  showIcon
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg 
+              shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Create Assignment
+              </button>
+
+              {/* Success Message */}
+              {message && (
+                <p className="mt-4 text-center text-sm font-medium text-green-500">
+                  {message}
+                </p>
+              )}
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );

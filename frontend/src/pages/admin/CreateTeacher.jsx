@@ -4,8 +4,7 @@ import Papa from "papaparse";
 import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
-import { MultiSelect } from 'primereact/multiselect';
-
+import { MultiSelect } from "primereact/multiselect";
 
 const CreateTeacher = () => {
   const [students, setStudents] = useState([]);
@@ -77,7 +76,6 @@ const CreateTeacher = () => {
       subjects: e.value, // e.value will now be an array of selected subjects
     });
   };
-  
 
   const handleDropdownChange2 = (e) => {
     setFormData({
@@ -128,21 +126,24 @@ const CreateTeacher = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.subjects || formData.subjects.length === 0) {
       setMessage("Please select at least one subject.");
       return;
     }
-  
+
     try {
-      const response = await fetch(`http://localhost:3001/teacher-form-submit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-  
+      const response = await fetch(
+        `http://localhost:3001/teacher-form-submit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
       const data = await response.json();
       if (response.ok) {
         setMessage(data.msg || "Teacher created successfully!");
@@ -154,8 +155,6 @@ const CreateTeacher = () => {
       setMessage("An error occurred. Please try again.");
     }
   };
-  
-
 
   return (
     <div className="flex">
@@ -172,7 +171,7 @@ const CreateTeacher = () => {
         </div>
 
         {/* Form and CSV Upload centered */}
-        <div className="flex justify-center items-center h-full py-24 bg-gray-300">
+        <div className="flex justify-center items-center h-full py-24 bg-gradient-to-t from-blue-50 to-blue-200">
           <div className="bg-white p-6 rounded-lg shadow-md mt-5 mb-5">
             <form onSubmit={handleSubmit}>
               <div className="mt-8 mb-4">
@@ -204,12 +203,12 @@ const CreateTeacher = () => {
                   options={subjectOptions}
                   onChange={handleDropdownChange1}
                   placeholder="Select Subjects"
-                  className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
-                    } rounded-md`}
+                  className={`w-full border-2 ${
+                    isFocused ? "border-indigo-500" : "border-gray-300"
+                  } rounded-md`}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                 />
-
               </div>
 
               <div className="mb-8">

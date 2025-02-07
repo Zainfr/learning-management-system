@@ -281,33 +281,33 @@ const AdminDashboard = () => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col justify-center min-h-screen max-h-full pt-24 bg-gray-300 ">
+        <div className="flex flex-col justify-center min-h-screen max-h-full pt-24 bg-gradient-to-t from-blue-100 to-blue-200 ">
           <div className="m-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-6xl h-fit">
               {/* Number of Students */}
-              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <h2 className="text-xl font-bold text-gray-800 ">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
+                <h2 className="text-xl font-bold text-white ">
                   Number of Students
                 </h2>
-                <p className="text-4xl font-semibold text-blue-600  mt-2">
+                <p className="text-4xl font-semibold text-white  mt-2">
                   {numberOfStudents !== null ? numberOfStudents : "Loading..."}
                 </p>
               </div>
 
               {/* Number of Teachers */}
-              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <h2 className="text-xl font-bold text-gray-800 ">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
+                <h2 className="text-xl font-bold text-white ">
                   Number of Teachers
                 </h2>
-                <p className="text-4xl font-semibold text-green-600  mt-2">
+                <p className="text-4xl font-semibold text-white  mt-2">
                   {numberOfTeachers !== null ? numberOfTeachers : "Loading..."}
                 </p>
               </div>
-              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <h2 className="text-xl font-bold text-gray-800 ">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
+                <h2 className="text-xl font-bold text-white ">
                   Number of Courses
                 </h2>
-                <p className="text-4xl font-semibold text-yellow-600  mt-2">
+                <p className="text-4xl font-semibold text-white  mt-2">
                   {numberofCourses !== null ? numberofCourses : "Loading..."}
                 </p>
               </div>
@@ -328,22 +328,23 @@ const AdminDashboard = () => {
                 options={semesterOptions}
                 onChange={handleSemesterChange}
                 placeholder="Select Semester"
-                className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
-                  } rounded-md`}
+                className={`w-full border-2 ${
+                  isFocused ? "border-indigo-500" : "border-gray-300"
+                } rounded-md`}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
               />
             </div>
-            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border border-gray-300">
+            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border-2 border-blue-300">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                <tr className="bg-blue-500">
+                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
                     Name
                   </th>
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
                     Roll No.
                   </th>
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
                     Actions
                   </th>
                 </tr>
@@ -389,16 +390,16 @@ const AdminDashboard = () => {
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">
               Teachers List
             </h2>
-            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border border-gray-300">
+            <table className="min-w-full  bg-white p-6 rounded-md shadow-lg border-2 border-blue-300">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                <tr className="bg-blue-500">
+                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
                     Name
                   </th>
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
                     Mobile No.
                   </th>
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
                     Actions
                   </th>
                 </tr>
@@ -446,16 +447,17 @@ const AdminDashboard = () => {
                 options={semesterOptions}
                 onChange={handleCourseChange}
                 placeholder="Select Semester"
-                className={`w-full border-2 ${isFocused ? "border-indigo-500" : "border-gray-300"
-                  } rounded-md`}
+                className={`w-full border-2 ${
+                  isFocused ? "border-indigo-500" : "border-gray-300"
+                } rounded-md`}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
               />
             </div>
-            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border border-gray-300">
+            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border-2 border-blue-300">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="py-2 px-4 border-b border-gray-300 text-left">
+                <tr className="bg-blue-500">
+                  <th className="text-white py-2 px-4 border-b border-gray-300 text-left">
                     Course
                   </th>
                 </tr>

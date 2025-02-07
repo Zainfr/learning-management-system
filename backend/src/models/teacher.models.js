@@ -38,7 +38,7 @@ const teacherSchema = new mongoose.Schema({
     },
     subjects : [{
         type : mongoose.Schema.ObjectId,
-        ref : "Subjects",
+        ref : "Subject",
     }],
     study_material :[studyMaterialSchema],
     mentees : [{

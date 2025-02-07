@@ -62,7 +62,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-screen bg-transparent">
       <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         {error && <div className="text-red-500 mb-2">{error}</div>}

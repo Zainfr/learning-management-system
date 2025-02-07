@@ -185,7 +185,7 @@ const CreateStudent = () => {
         </div>
 
         {/* Form and CSV Upload centered */}
-        <div className="flex justify-center items-center h-full pt-24 bg-gray-300">
+        <div className="flex justify-center items-center h-full pt-24 bg-gradient-to-t from-blue-50 to-blue-200">
           <div className="bg-white p-6 rounded-lg shadow-md mt-5 mb-5">
             <form onSubmit={handleSubmit}>
               <div className="mb-8">

@@ -3,8 +3,24 @@ import Header from "../../components/Header";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StudentSidebar from "../../components/StudentSidebar";
+import {
+  FaGraduationCap,
+  FaBook,
+  FaCalendarAlt,
+  FaClock,
+} from "react-icons/fa";
 
 const StudentDashboard = () => {
+  const profileImageURLS = [
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR18Ios0zLfBTJ-FnoCg8pfFjjKtNLuw4bVqg&s",
+    "https://images.unsplash.com/photo-1495360010541-f48722b34f7d?q=80&w=1936&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhdHxlbnwwfHwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZnVubnklMjBjYXR8ZW58MHx8MHx8fDA%3D",
+    "https://media.istockphoto.com/id/916176576/photo/big-eyed-naughty-obese-cat-showing-paws-on-wooden-table.jpg?s=1024x1024&w=is&k=20&c=2N0xhn4lTDjxm5eHpkFnVaiLIAs2dC5c3LGnLpW7tK4=",
+    "https://images.unsplash.com/photo-1518288774672-b94e808873ff?q=80&w=1938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  ];
   const [student, setStudent] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { id } = useParams();
@@ -39,71 +55,135 @@ const StudentDashboard = () => {
       } catch (error) {
         console.error("Error fetching Student:", error);
       }
-      console.log(student)
+      console.log(student);
     };
 
     fetchStudent();
   }, []);
 
-  const handleClick1 = () => {
-    navigate(`/student/${id}/assignments`);
-  };
-
-  const handleClick2 = () => {
-    navigate(`/student/${id}/upload/${rollNo}`);
-  };
-
-  const handleClick3 = () => {
-    navigate(`/student/${id}/experiments/${rollNo}`);
-  };
-
   return (
     <div className="h-screen flex flex-col">
-    <div className="sticky top-0 left-0 right-0 z-20">
-      <Header user="Student" />
-    </div>
+      <div className="sticky top-0 left-0 right-0 z-20">
+        <Header user="Student" />
+      </div>
 
-    <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
-      {/* Sidebar - Collapsible on Mobile */}
-      <div className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"}`}>
-        <button 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-          className="text-white p-2 block md:hidden"
+      <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
+        <div
+          className={`h-full bg-blue-800 transition-all duration-300 ${
+            isSidebarOpen ? "w-64" : "w-16"
+          }`}
         >
-          {isSidebarOpen ? "❌" : "☰"}
-        </button>
-        <StudentSidebar userName={student?.name} rollNo={student?.rollno}/>
+          <StudentSidebar userName={student?.name} rollNo={student?.rollno} />
+        </div>
+
+        <div className="flex-1 bg-gray-50 p-8 overflow-auto">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-4 gap-6">
+              {/* Profile Card - Spans 2 columns */}
+              <div className="md:col-span-2 md:row-span-3 bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex flex-col items-center space-y-6 mt-8">
+                  <div className="relative">
+                    <img
+                      src={profileImageURLS[Math.floor(Math.random() * 8)]}
+                      alt="Profile"
+                      className="w-32 aspect-square rounded-full object-cover border-4 border-blue-100 shadow-lg"
+                    />
+                    <div className="absolute -bottom-2 -right-2 bg-green-400 w-6 h-6 rounded-full border-4 border-white"></div>
+                  </div>
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold text-gray-800">
+                      {student?.name}
+                    </h2>
+                    <p className="text-blue-600 font-medium">
+                      {student?.rollno}
+                    </p>
+                  </div>
+                  <div className="flex space-x-3">
+                    <span className="px-4 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
+                      Computer Engineering
+                    </span>
+                    <span className="px-4 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">
+                      Active
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogoutClick}
+                    className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-16 rounded-full shadow-md transition duration-300"
+                  >
+                    Log out
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Stats Cards */}
+              <div className="md:col-span-1 md:row-span-1 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
+                <div className="flex items-center space-x-4 mb-4">
+                  <FaBook className="text-2xl" />
+                  <h3 className="text-lg font-semibold">Subjects</h3>
+                </div>
+                <p className="text-3xl font-bold">
+                  {student?.experiments?.length || 0}
+                </p>
+                <p className="text-blue-100 mt-2">Enrolled Courses</p>
+              </div>
+
+              <div className="md:col-span-1 md:row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                <div className="flex items-center space-x-4 mb-4">
+                  <FaGraduationCap className="text-2xl" />
+                  <h3 className="text-lg font-semibold">Semester</h3>
+                </div>
+                <p className="text-3xl font-bold">5</p>
+                <p className="text-purple-100 mt-2">Current Progress</p>
+              </div>
+
+              {/* Subjects List */}
+              <div className="md:col-span-2 md:row-span-3 bg-white rounded-2xl p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Enrolled Subjects
+                </h3>
+                <div className="grid grid-cols-1 gap-3">
+                  {student?.experiments?.map((experiment, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors duration-200"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <FaBook className="text-blue-600" />
+                        </div>
+                        <span className="font-medium text-gray-700">
+                          {experiment.subject_name}
+                        </span>
+                      </div>
+                      <span className="text-sm text-gray-500">In Progress</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Contact Details Card */}
+              <div className="md:col-span-2 md:row-span-1 bg-white rounded-2xl p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Contact Information
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">Email Address</p>
+                    <p className="font-medium text-gray-800">
+                      {student?.email}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">Phone Number</p>
+                    <p className="font-medium text-gray-800">
+                      {student?.mobile}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Main Content */}
-      <div className="flex-1 bg-gray-100 flex justify-center items-center p-6">
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
-    
-    {/* Profile Section */}
-    <div className="md:col-span-2 bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center space-y-6">
-      <img 
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR18Ios0zLfBTJ-FnoCg8pfFjjKtNLuw4bVqg&s" 
-        alt="Profile Image" 
-        className="rounded-full border-4 border-blue-500 shadow-md"
-      />
-      <div className="space-y-2">
-      <h1 className="text-3xl py-2 font-black text-gray-800">{student?.name}</h1>
-      <p className="text-gray-600 text-lg">
-        <span className="font-semibold">Roll No:</span> {student?.rollno}
-      </p>
-      <p className="text-gray-600 text-lg">
-        <span className="font-semibold">Created At:</span> {student?.updatedAt}
-      </p>
-      </div>
-
-      {/* Logout Button */}
-      <button 
-        onClick={handleLogoutClick} 
-        className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-16 rounded-full shadow-md transition duration-300"
-      >
-        Log out
-      </button>
-
       {/* Logout Confirmation Modal */}
       {isVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -128,43 +208,6 @@ const StudentDashboard = () => {
         </div>
       )}
     </div>
-
-    {/* Details & Subjects Section */}
-    <div className="space-y-6">
-      
-      {/* Contact Details */}
-      <div className="bg-white rounded-2xl shadow-xl p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Details</h3>
-        <p className="text-gray-600">
-          <span className="font-semibold">Email:</span> {student?.email}
-        </p>
-        <p className="text-gray-600">
-          <span className="font-semibold">Phone:</span> {student?.mobile}
-        </p>
-      </div>
-
-      {/* Subjects */}
-      <div className="bg-white rounded-2xl shadow-xl p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Subjects</h3>
-        <div className="space-y-3">
-          {student?.experiments?.map((experiment, index) => (
-            <div 
-              key={index} 
-              className="flex justify-between items-center bg-blue-100 border border-blue-300 rounded-lg px-4 py-3 shadow-sm"
-            >
-              <p className="text-gray-800 font-medium">{experiment.subject_name}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-    </div>
-  </div>
   );
 };
 
