@@ -3,7 +3,8 @@ import SideBar from "../../components/SideBar";
 import { Dropdown } from "primereact/dropdown";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import EditStudentModal from "../../components/EditStudentModal";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
 
 const AdminDashboard = () => {
   const [numberOfStudents, setNumberOfStudents] = useState(null);
@@ -273,54 +274,63 @@ const AdminDashboard = () => {
             <h1 className="text-3xl text-gray-700 font-semibold pl-8 ">
               Admin Dashboard
             </h1>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
-            >
-              Logout
-            </button>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="pl-10 pr-4 py-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              </div>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
-        <div className="flex flex-col justify-center min-h-screen max-h-full pt-24 bg-gradient-to-t from-blue-100 to-blue-200 ">
+        <div className="flex flex-col justify-center min-h-screen max-h-full pt-24 bg-gray-200 ">
           <div className="m-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-6xl h-fit">
               {/* Number of Students */}
-              <div className="bg-gradient-to-br from-blue-500 to-blue-600 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <h2 className="text-xl font-bold text-white ">
+              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col border border-gray-300">
+                <h2 className="text-md font-normal text-gray-600">
                   Number of Students
                 </h2>
-                <p className="text-4xl font-semibold text-white  mt-2">
+                <p className="text-4xl font-semibold text-blue-500  mt-2">
                   {numberOfStudents !== null ? numberOfStudents : "Loading..."}
                 </p>
               </div>
 
               {/* Number of Teachers */}
-              <div className="bg-gradient-to-br from-blue-500 to-blue-600 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <h2 className="text-xl font-bold text-white ">
+              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col border border-gray-300">
+                <h2 className="text-md font-normal text-gray-600 ">
                   Number of Teachers
                 </h2>
-                <p className="text-4xl font-semibold text-white  mt-2">
+                <p className="text-4xl font-semibold text-blue-500  mt-2">
                   {numberOfTeachers !== null ? numberOfTeachers : "Loading..."}
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-blue-500 to-blue-600 0 p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <h2 className="text-xl font-bold text-white ">
+              <div className="bg-white 0 p-6 rounded-lg shadow-lg flex flex-col border border-gray-300">
+                <h2 className="text-md font-normal text-gray-600 ">
                   Number of Courses
                 </h2>
-                <p className="text-4xl font-semibold text-white  mt-2">
+                <p className="text-4xl font-semibold text-blue-500  mt-2">
                   {numberofCourses !== null ? numberofCourses : "Loading..."}
                 </p>
               </div>
             </div>
           </div>
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-              Students List
-            </h2>
-            <div className="mb-4">
-              <label htmlFor="semester" className="block text-gray-700 mb-2">
-                Semester
-              </label>
+          <div className="m-6 bg-white rounded-lg shadow-lg border border-gray-300">
+            <div className="p-4 border-b">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Students List
+              </h2>
+            </div>
+            <div className="p-4">
               <Dropdown
                 id="sem"
                 name="sem"
@@ -335,111 +345,123 @@ const AdminDashboard = () => {
                 onBlur={() => setIsFocused(false)}
               />
             </div>
-            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border-2 border-blue-300">
-              <thead>
-                <tr className="bg-blue-500">
-                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
-                    Name
-                  </th>
-                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
-                    Roll No.
-                  </th>
-                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents && filteredStudents.length > 0 ? (
-                  filteredStudents.map((student) => (
-                    <tr key={student._id}>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        {student.name}
-                      </td>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        {student.rollno}
-                      </td>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        <button
-                          className="bg-red-500 text-white py-1 px-3 mx-3 rounded hover:bg-red-600 transition"
-                          onClick={() => handleDeleteStudent(student._id)}
-                        >
-                          Delete
-                        </button>
-                        <button
-                          className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 transition"
-                          onClick={() => handleEditStudent(student._id)}
-                        >
-                          Edit
-                        </button>
-                      </td>
+            <div className="p-4">
+              <div className="overflow-hidden rounded-lg border shadow-lg">
+                <table className="min-w-full bg-white p-6">
+                  <thead>
+                    <tr className="bg-blue-600">
+                      <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
+                        Name
+                      </th>
+                      <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
+                        Roll No.
+                      </th>
+                      <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
+                        Actions
+                      </th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center py-4">
-                      No students found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {filteredStudents && filteredStudents.length > 0 ? (
+                      filteredStudents.map((student) => (
+                        <tr key={student._id}>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            {student.name}
+                          </td>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            {student.rollno}
+                          </td>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            <button
+                              className="bg-red-500 text-white py-1 px-3 mx-3 rounded hover:bg-red-600 transition"
+                              onClick={() => handleDeleteStudent(student._id)}
+                            >
+                              Delete
+                            </button>
+                            <button
+                              className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 transition"
+                              onClick={() => handleEditStudent(student._id)}
+                            >
+                              Edit
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="text-center py-4">
+                          No students found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-              Teachers List
-            </h2>
-            <table className="min-w-full  bg-white p-6 rounded-md shadow-lg border-2 border-blue-300">
-              <thead>
-                <tr className="bg-blue-500">
-                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
-                    Name
-                  </th>
-                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
-                    Mobile No.
-                  </th>
-                  <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {teachers && teachers.length > 0 ? (
-                  teachers.map((teacher) => (
-                    <tr key={teacher._id}>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        {teacher.teacher_name}
-                      </td>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        {teacher.mobile}
-                      </td>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        <button
-                          className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
-                          onClick={() => handleDeleteTeacher(teacher._id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
+          <div className="m-6 bg-white rounded-lg shadow-lg border border-gray-300">
+            <div className="p-4 border-b">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Teachers List
+              </h2>
+            </div>
+            <div className="p-4">
+              <div className="overflow-hidden rounded-lg border shadow-lg">
+                <table className="min-w-full  bg-white p-6">
+                  <thead>
+                    <tr className="bg-blue-600">
+                      <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
+                        Name
+                      </th>
+                      <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
+                        Mobile No.
+                      </th>
+                      <th className="py-2 text-white px-4 border-b border-gray-300 text-left">
+                        Actions
+                      </th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center py-4">
-                      No teachers found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-            <h2 className="text-2xl font-semibold mt-12 text-gray-700 mb-4">
-              Course List
-            </h2>
-            <div className="mb-4">
-              <label htmlFor="semester" className="block text-gray-700 mb-2">
-                Select Semester
-              </label>
+                  </thead>
+                  <tbody>
+                    {teachers && teachers.length > 0 ? (
+                      teachers.map((teacher) => (
+                        <tr key={teacher._id}>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            {teacher.teacher_name}
+                          </td>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            {teacher.mobile}
+                          </td>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            <button
+                              className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
+                              onClick={() => handleDeleteTeacher(teacher._id)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="text-center py-4">
+                          No teachers found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="m-6 bg-white rounded-lg shadow-lg border border-gray-300">
+            <div className="p-4 border-b">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Teachers List
+              </h2>
+            </div>
+            <div className="p-4">
               <Dropdown
                 id="sem"
                 name="sem"
@@ -454,32 +476,36 @@ const AdminDashboard = () => {
                 onBlur={() => setIsFocused(false)}
               />
             </div>
-            <table className="min-w-full bg-white p-6 rounded-md shadow-lg border-2 border-blue-300">
-              <thead>
-                <tr className="bg-blue-500">
-                  <th className="text-white py-2 px-4 border-b border-gray-300 text-left">
-                    Course
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCourses && filteredCourses.length > 0 ? (
-                  filteredCourses.map((course) => (
-                    <tr key={course._id}>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        {course.course_name}
-                      </td>
+            <div className="p-4">
+              <div className="overflow-hidden rounded-lg border border-blue-500">
+                <table className="min-w-full bg-white p-6 shadow-lg">
+                  <thead>
+                    <tr className="bg-blue-600">
+                      <th className="text-white py-2 px-4 border-b border-gray-300 text-left">
+                        Course
+                      </th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center py-4">
-                      No Course found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {filteredCourses && filteredCourses.length > 0 ? (
+                      filteredCourses.map((course) => (
+                        <tr key={course._id}>
+                          <td className="py-2 px-4 border-b border-gray-300">
+                            {course.course_name}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="text-center py-4">
+                          No Course found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
             {isModalOpen && (
               <EditStudentModal
                 isOpen={isModalOpen}
