@@ -67,7 +67,7 @@ export const getExperiments = async (req, res) => {
         }
 
         // Filter experiments to include only those with a filePath
-        const experimentsWithFiles = student.experiments.filter(exp => exp.filePath);
+        const experimentsWithFiles = student.experiments.filter(exp => exp.folder_path);
 
         // Map the filtered experiments to include only necessary information
         const experimentsData = experimentsWithFiles.map(exp => ({
