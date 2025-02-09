@@ -65,7 +65,7 @@ export const getStudyMaterial = async (req, res) => {
         if (!teacher)
             return res.status(404).json({ success: false, message: "Teacher not found" })
 
-        const materialWithFiles = teacher.study_material.filter(mats => mats.filePath);
+        const materialWithFiles = teacher.study_material.filter(mats => mats.filePath && mats.subject_name);
 
         const materialData = materialWithFiles.map(mats => ({
             _id: mats._id,
