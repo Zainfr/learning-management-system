@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import logo from "../assets/aiktc-logo.png"; // Update the path to your logo
 import { FaBars } from "react-icons/fa";
-import { FaHome, FaBook, FaUserGraduate, FaChalkboardTeacher } from "react-icons/fa";
+import { UserCircle, BookOpen, Users, GraduationCap } from "lucide-react";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to control sidebar visibility on mobile
@@ -50,9 +50,12 @@ const SideBar = () => {
                       : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
                   }`}
                 >
-                  <FaHome size={24} className={`transition-colors duration-300 ${
-                    isActive("/admin") ? "text-blue-600" : ""
-                  }`} />
+                  <UserCircle
+                    size={24}
+                    className={`transition-colors duration-300 ${
+                      isActive("/admin") ? "text-blue-600" : ""
+                    }`}
+                  />
                   <p className="pl-4">Dashboard</p>
                 </Link>
               </li>
@@ -65,9 +68,14 @@ const SideBar = () => {
                       : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
                   }`}
                 >
-                  <FaBook size={24} className={`transition-colors duration-300 ${
-                    isActive(`/admin/${id}/createCourse`) ? "text-blue-600" : ""
-                  }`} />
+                  <BookOpen
+                    size={24}
+                    className={`transition-colors duration-300 ${
+                      isActive(`/admin/${id}/createCourse`)
+                        ? "text-blue-600"
+                        : ""
+                    }`}
+                  />
                   <p className="pl-4">Create Course</p>
                 </Link>
               </li>
@@ -80,9 +88,14 @@ const SideBar = () => {
                       : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
                   }`}
                 >
-                  <FaUserGraduate size={24} className={`transition-colors duration-300 ${
-                    isActive(`/admin/${id}/createStudent`) ? "text-blue-600" : ""
-                  }`} />
+                  <Users
+                    size={24}
+                    className={`transition-colors duration-300 ${
+                      isActive(`/admin/${id}/createStudent`)
+                        ? "text-blue-600"
+                        : ""
+                    }`}
+                  />
 
                   <p className="pl-4">Create Student</p>
                 </Link>
@@ -96,9 +109,14 @@ const SideBar = () => {
                       : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
                   }`}
                 >
-                  <FaChalkboardTeacher size={24} className={`transition-colors duration-300 ${
-                    isActive(`/admin/${id}/createTeacher`) ? "text-blue-600" : ""
-                  }`}  />
+                  <GraduationCap
+                    size={24}
+                    className={`transition-colors duration-300 ${
+                      isActive(`/admin/${id}/createTeacher`)
+                        ? "text-blue-600"
+                        : ""
+                    }`}
+                  />
 
                   <p className="pl-4">Create Teacher</p>
                 </Link>

@@ -4,6 +4,8 @@ import StudentExperiment from "./StudentExperiment";
 import UploadAssignment from "./UploadAssignment";
 import UploadExperiment from "./UploadExperiment";
 import ViewExperiments from "./ViewExperiment";
+import ViewSpecificExperiment from "./ViewSpecificExperiment";
+import ViewStudyMaterial from "./ViewStudyMaterial";
 
 const Student = () => {
   return (
@@ -15,7 +17,12 @@ const Student = () => {
         element={<UploadAssignment />}
       />
       <Route path="/upload/:rollno" element={<UploadExperiment />} />
-      <Route path="/experiments/:rollno" element={<ViewExperiments/>}/>
+      <Route path="/experiments/:rollno" element={<ViewExperiments />} />
+      <Route
+        path="/experiments/:subject_name/:rollno"
+        element={<ViewSpecificExperiment />}
+      />
+      <Route path="/studyMaterials" element={<ViewStudyMaterial />} />
     </Routes>
   );
 };

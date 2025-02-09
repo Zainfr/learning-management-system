@@ -5,6 +5,7 @@ import {
   FaBook,
   FaUserGraduate,
   FaChalkboardTeacher,
+  FaFileUpload,
 } from "react-icons/fa";
 
 const TeacherSidebar = ({ userName, rollNo }) => {
@@ -93,6 +94,26 @@ const TeacherSidebar = ({ userName, rollNo }) => {
                   }`}
                 />
                 <span className="pl-4 font-medium">Experiments</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`/teacher/${id}/upload/studyMaterial`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${
+                  isActive(`/teacher/${id}/upload/studyMaterial`)
+                    ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                    : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                }`}
+              >
+                <FaFileUpload
+                  size={20}
+                  className={`transition-colors duration-300 ${
+                    isActive(`/teacher/${id}/upload/studyMaterial`)
+                      ? "text-blue-600"
+                      : ""
+                  }`}
+                />
+                <span className="pl-4 font-medium">Upload Material</span>
               </Link>
             </li>
           </ul>

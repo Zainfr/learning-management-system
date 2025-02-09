@@ -3,12 +3,7 @@ import Header from "../../components/Header";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StudentSidebar from "../../components/StudentSidebar";
-import {
-  FaGraduationCap,
-  FaBook,
-  FaCalendarAlt,
-  FaClock,
-} from "react-icons/fa";
+import { BookOpen, GraduationCap, BookCheck } from "lucide-react";
 
 const StudentDashboard = () => {
   const profileImageURLS = [
@@ -118,7 +113,7 @@ const StudentDashboard = () => {
               {/* Quick Stats Cards */}
               <div className="md:col-span-1 md:row-span-1 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
                 <div className="flex items-center space-x-4 mb-4">
-                  <FaBook className="text-2xl" />
+                  <BookOpen className="text-2xl" />
                   <h3 className="text-lg font-semibold">Subjects</h3>
                 </div>
                 <p className="text-3xl font-bold">
@@ -129,7 +124,7 @@ const StudentDashboard = () => {
 
               <div className="md:col-span-1 md:row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
                 <div className="flex items-center space-x-4 mb-4">
-                  <FaGraduationCap className="text-2xl" />
+                  <GraduationCap className="text-2xl" />
                   <h3 className="text-lg font-semibold">Semester</h3>
                 </div>
                 <p className="text-3xl font-bold">5</p>
@@ -149,7 +144,7 @@ const StudentDashboard = () => {
                     >
                       <div className="flex items-center space-x-3">
                         <div className="p-2 bg-blue-100 rounded-lg">
-                          <FaBook className="text-blue-600" />
+                          <BookCheck className="text-blue-600" />
                         </div>
                         <span className="font-medium text-gray-700">
                           {experiment.subject_name}

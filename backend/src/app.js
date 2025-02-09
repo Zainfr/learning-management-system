@@ -40,7 +40,7 @@ app.use('/api/drive', driveRoute);
 // to get the Teacher id for frontend.
 app.get('/api/teachers', async (req, res) => {
   try {
-    const teachers = await Teacher.find({});
+    const teachers = await Teacher.find({}).populate('subjects').exec();
     res.json(teachers)
   } catch (error) {
     console.error('Error Fetching the Teachers : error');
