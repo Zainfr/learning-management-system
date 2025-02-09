@@ -49,6 +49,7 @@ export const uploadExperimentFile = async (req, res) => {
     }
 };
 
+//YEH USE KR IN ViewExperiment.jsx
 export const getExperiments = async (req, res) => {
     try {
         const { rollno } = req.params;
@@ -82,6 +83,7 @@ export const getExperiments = async (req, res) => {
     }
 }
 
+//YEH USE KR IN ViewSpecificExperiment.jsx
 export const getExperimentsBySubject = async (req, res) => {
     try {
         const { studentId, subject_name } = req.params;
