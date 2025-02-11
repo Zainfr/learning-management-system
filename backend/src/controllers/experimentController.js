@@ -49,6 +49,7 @@ export const uploadExperimentFile = async (req, res) => {
     }
 };
 
+//YEH USE KR IN ViewExperiment.jsx
 export const getExperiments = async (req, res) => {
     try {
         const { rollno } = req.params;
@@ -66,7 +67,7 @@ export const getExperiments = async (req, res) => {
         }
 
         // Filter experiments to include only those with a filePath
-        const experimentsWithFiles = student.experiments.filter(exp => exp.filePath);
+        const experimentsWithFiles = student.experiments.filter(exp => exp.folder_path);
 
         // Map the filtered experiments to include only necessary information
         const experimentsData = experimentsWithFiles.map(exp => ({
@@ -82,6 +83,7 @@ export const getExperiments = async (req, res) => {
     }
 }
 
+//YEH USE KR IN ViewSpecificExperiment.jsx
 export const getExperimentsBySubject = async (req, res) => {
     try {
         const { studentId, subject_name } = req.params;
