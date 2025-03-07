@@ -51,12 +51,12 @@ const ViewExperiments = () => {
                                 <p className="text-sm text-gray-500 mb-4">
                                     <strong>File Path:</strong>
                                     <a
-                                        href={`http://localhost:3001${experiment.filePath}`}
+                                        href={`http://localhost:3001${experiment.folderPath}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-blue-500 hover:text-blue-700 transition-colors"
                                     >
-                                        {experiment.filePath}
+                                        {experiment.folderPath}
                                     </a>
                                 </p>
                                 <button

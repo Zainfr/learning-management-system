@@ -9,9 +9,25 @@ const ViewExperiments = () => {
   const [student, setStudent] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [error, setError] = useState(null);
+  const [experiment, setExperiment] = useState([]);
   const { rollno } = useParams();
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const fetchExperiments = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/drive/experiments/${rollno}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setExperiment(data.experiments);
+      console.log("Fetched experiments data:", data.experiments); // Debug log
+    } catch (error) {
+      console.error("Error fetching Experiments:", error);
+      setError("Error fetching Experiments");
+    }
+  }
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -27,13 +43,9 @@ const ViewExperiments = () => {
         console.error("Error fetching Student:", error);
       }
     };
-
     fetchStudent();
+    fetchExperiments();
   }, [rollno]);
-
-  if (error) {
-    return <div className="text-center text-red-500 mt-4">{error}</div>;
-  }
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-50">
@@ -42,9 +54,8 @@ const ViewExperiments = () => {
       </div>
       <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
         <div
-          className={`h-full bg-blue-800 transition-all duration-300 ${
-            isSidebarOpen ? "w-64" : "w-16"
-          }`}
+          className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"
+            }`}
         >
           <StudentSidebar userName={student?.name} rollNo={student?.rollno} />
         </div>
@@ -52,7 +63,7 @@ const ViewExperiments = () => {
         <div className="flex-1 p-12 overflow-auto">
           {
             <div className="grid grid-cols-1 gap-6">
-              {student.experiments?.map((experiment, index) => (
+              {experiment?.map((experiment, index) => (
                 <div
                   key={index}
                   className="flex items-center group backdrop-blur-sm bg-white/80 p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] 

@@ -17,6 +17,7 @@ const StudentDashboard = () => {
     "https://images.unsplash.com/photo-1518288774672-b94e808873ff?q=80&w=1938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
   const [student, setStudent] = useState({});
+  const [experiment, setExperiment] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -38,6 +39,21 @@ const StudentDashboard = () => {
     setIsVisible(true);
   };
 
+  const fetchExperiments = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/drive/experiments/${student?.rollno}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setExperiment(data.experiments);
+      console.log("Fetched experiments data:", data.experiments); // Debug log
+    } catch (error) {
+      console.error("Error fetching Experiments:", error);
+      setError("Error fetching Experiments");
+    }
+  }
+
   useEffect(() => {
     const fetchStudent = async () => {
       try {
@@ -54,6 +70,7 @@ const StudentDashboard = () => {
     };
 
     fetchStudent();
+    fetchExperiments();
   }, []);
 
   return (
@@ -64,9 +81,8 @@ const StudentDashboard = () => {
 
       <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
         <div
-          className={`h-full bg-blue-800 transition-all duration-300 ${
-            isSidebarOpen ? "w-64" : "w-16"
-          }`}
+          className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"
+            }`}
         >
           <StudentSidebar userName={student?.name} rollNo={student?.rollno} />
         </div>
@@ -117,7 +133,7 @@ const StudentDashboard = () => {
                   <h3 className="text-lg font-semibold">Subjects</h3>
                 </div>
                 <p className="text-3xl font-bold">
-                  {student?.experiments?.length || 0}
+                  {experiment?.length || 0}
                 </p>
                 <p className="text-blue-100 mt-2">Enrolled Courses</p>
               </div>
@@ -137,7 +153,7 @@ const StudentDashboard = () => {
                   Enrolled Subjects
                 </h3>
                 <div className="grid grid-cols-1 gap-3">
-                  {student?.experiments?.map((experiment, index) => (
+                  {experiment?.map((experiment, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors duration-200"

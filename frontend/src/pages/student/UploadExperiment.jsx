@@ -6,12 +6,29 @@ import StudentSidebar from "../../components/StudentSidebar";
 
 const UploadExperiment = () => {
   const [student, setStudent] = useState({});
+  const [experiment, setExperiment] = useState([]);
+  const { rollno } = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
   const [selectedExperimentIndex, setSelectedExperimentIndex] = useState(null);
   const { id } = useParams();
+
+  const fetchExperiments = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/drive/experiments/${rollno}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setExperiment(data.experiments);
+      console.log("Fetched experiments data:", data.experiments); // Debug log
+    } catch (error) {
+      console.error("Error fetching Experiments:", error);
+      setError("Error fetching Experiments");
+    }
+  }
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -29,6 +46,7 @@ const UploadExperiment = () => {
     };
 
     fetchStudent();
+    fetchExperiments();
   }, [id]);
 
   const handleUploadClick = (index) => {
@@ -112,9 +130,8 @@ const UploadExperiment = () => {
       </div>
       <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
         <div
-          className={`h-full bg-blue-800 transition-all duration-300 ${
-            isSidebarOpen ? "w-64" : "w-16"
-          }`}
+          className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"
+            }`}
         >
           <StudentSidebar userName={student?.name} rollNo={student?.rollno} />
         </div>
@@ -124,7 +141,7 @@ const UploadExperiment = () => {
           </h2>
           {student?.experiments?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
-              {student?.experiments?.map((experiment, index) => (
+              {experiment?.map((experiment, index) => (
                 <div
                   key={index}
                   className="bg-blue-100 shadow-md rounded-lg p-6 hover:bg-blue-200 transition transform hover:scale-95 flex flex-col justify-between folder relative"
