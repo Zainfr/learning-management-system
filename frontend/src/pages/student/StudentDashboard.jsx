@@ -133,7 +133,7 @@ const StudentDashboard = () => {
                   <h3 className="text-lg font-semibold">Subjects</h3>
                 </div>
                 <p className="text-3xl font-bold">
-                  {experiment?.length || 0}
+                  {student.experiments?.length || 0}
                 </p>
                 <p className="text-blue-100 mt-2">Enrolled Courses</p>
               </div>
@@ -153,7 +153,7 @@ const StudentDashboard = () => {
                   Enrolled Subjects
                 </h3>
                 <div className="grid grid-cols-1 gap-3">
-                  {experiment?.map((experiment, index) => (
+                  {student?.experiments?.map((experiment, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors duration-200"
