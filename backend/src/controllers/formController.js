@@ -7,7 +7,7 @@ import { Teacher } from "../models/teacher.models.js";
 
 const importUserForm = async (req, res) => {
   try {
-    const { name, rollno, mobile, sem, mentor, email, password } = req.body;
+    const { name, rollno, mobile, sem, mentor,batch, email, password } = req.body;
 
     const semester = await Semester.findById(sem).populate('subjects');
     if (!semester) {
@@ -20,6 +20,7 @@ const importUserForm = async (req, res) => {
       mobile,
       sem,
       mentor,
+      batch,
       email,
       password,
     });

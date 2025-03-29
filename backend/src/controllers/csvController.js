@@ -5,6 +5,7 @@ import { Teacher } from '../models/teacher.models.js';
 import { createStudentFolders } from './folderController.js';
 import { assignMenteesToTeacher } from '../middlewares/assignMentee.js';
 import bcrypt from 'bcrypt';
+import { Batch } from '../models/batch.model.js';
 
 
 /*
@@ -37,6 +38,11 @@ const importUserCsv = async (req, res) => {
                 throw new Error(`Teacher ${user.mentor} not found in the Database`);
             }
 
+            const batch = await Batch.findOne({ batchNo: user.batch });
+            if (!batch) {
+                throw new Error(`batch not found in the Database`);
+            }
+
             // Hash the password
             const hashedPassword = await bcrypt.hash(user.password, 10);
 
@@ -47,6 +53,7 @@ const importUserCsv = async (req, res) => {
                 mobile: user.mobile,
                 sem: semester._id, // Use ObjectId
                 mentor: mentor._id,
+                batch:batch._id,
                 email: user.email,
                 password: hashedPassword,
             };
