@@ -10,12 +10,13 @@ const ViewExperiments = () => {
     useEffect(() => {
         const fetchExperiments = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/drive/experiments/${rollno}`);
+                const response = await fetch(`http://localhost:3001/api/drive/kamchalu/${rollno}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
                 setExperiments(data.experiments || []);
+                console.log(data.experiments);
             } catch (error) {
                 console.error("Error fetching Experiments:", error);
                 setError("Failed to fetch experiments. Please try again later.");
@@ -51,12 +52,12 @@ const ViewExperiments = () => {
                                 <p className="text-sm text-gray-500 mb-4">
                                     <strong>File Path:</strong>
                                     <a
-                                        href={`http://localhost:3001${experiment.folderPath}`}
+                                        href={`http://localhost:3001${experiment.filePath}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-blue-500 hover:text-blue-700 transition-colors"
                                     >
-                                        {experiment.folderPath}
+                                        {experiment.filePath}
                                     </a>
                                 </p>
                                 <button
@@ -70,7 +71,7 @@ const ViewExperiments = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 
