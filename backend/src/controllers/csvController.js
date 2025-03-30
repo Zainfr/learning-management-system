@@ -2,11 +2,10 @@ import csvtojson from 'csvtojson';
 import { Student } from '../models/student.model.js';
 import { Semester } from '../models/sem.model.js';
 import { Teacher } from '../models/teacher.models.js';
+import { Batch } from '../models/batch.model.js'; // Import Batch model
 import { createStudentFolders } from './folderController.js';
 import { assignMenteesToTeacher } from '../middlewares/assignMentee.js';
 import bcrypt from 'bcrypt';
-import { Batch } from '../models/batch.model.js';
-
 
 /*
 How this function works after working on it for 7 years and 29 months ?
@@ -17,6 +16,7 @@ How this function works after working on it for 7 years and 29 months ?
 4. after checking , it creates a object which holds all the new students. This object is then inserted in the database
 5. folders for each student is created.
 6. mentees are assigned then to the mentors. 
+7. assigning batch to students if available in CSV.
 */
 const importUserCsv = async (req, res) => {
     try {
@@ -24,6 +24,16 @@ const importUserCsv = async (req, res) => {
 
         const semesters = await Semester.find({}).populate('subjects');
         const semesterMap = new Map(semesters.map(s => [s.semester, s]));
+
+        // Find all batches
+        const batches = await Batch.find({});
+        const batchMap = new Map();
+        
+        // Create a map of batches for easy lookup
+        batches.forEach(batch => {
+            const key = `${batch.batchNo}-${batch.semester}`;
+            batchMap.set(key, batch._id);
+        });
 
         const userData = [];
 
@@ -38,11 +48,6 @@ const importUserCsv = async (req, res) => {
                 throw new Error(`Teacher ${user.mentor} not found in the Database`);
             }
 
-            const batch = await Batch.findOne({ batchNo: user.batch });
-            if (!batch) {
-                throw new Error(`batch not found in the Database`);
-            }
-
             // Hash the password
             const hashedPassword = await bcrypt.hash(user.password, 10);
 
@@ -53,10 +58,22 @@ const importUserCsv = async (req, res) => {
                 mobile: user.mobile,
                 sem: semester._id, // Use ObjectId
                 mentor: mentor._id,
-                batch:batch._id,
                 email: user.email,
                 password: hashedPassword,
             };
+            
+            // If batchNo exists in CSV, try to find the batch
+            if (user.batchNo) {
+                const batchKey = `${user.batchNo}-${semester._id}`;
+                const batchId = batchMap.get(batchKey);
+                
+                if (batchId) {
+                    newStudent.batch = batchId;
+                } else {
+                    // If batch doesn't exist, throw error
+                    throw new Error(`Batch with batchNo ${user.batchNo} for semester ${user.sem} not found in the Database`);
+                }
+            }
 
             userData.push(newStudent);
         }
@@ -88,6 +105,5 @@ const importUserCsv = async (req, res) => {
         res.status(400).send({ status: 400, success: false, msg: error.message });
     }
 };
-
 
 export default importUserCsv;
