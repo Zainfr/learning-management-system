@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import Header from "../../components/Header";
+import { useParams } from "react-router-dom";
+import StudentSidebar from "../../components/StudentSidebar";
 import {
   ChevronDown,
   ChevronRight,
@@ -9,10 +12,13 @@ import {
 } from "lucide-react";
 
 const ViewStudyMaterial = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [teachers, setTeachers] = useState([]);
   const [expandedTeacher, setExpandedTeacher] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [openFolders, setOpenFolders] = useState({});
+  const { id } = useParams();
+  const [student, setStudent] = useState({});
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -26,6 +32,20 @@ const ViewStudyMaterial = () => {
         console.error("Error fetching teachers:", error);
       }
     };
+    const fetchStudent = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/api/student/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setStudent(data?.student);
+      } catch (error) {
+        console.error("Error fetching Student:", error);
+      }
+      console.log(student);
+    };
+    fetchStudent();
     fetchTeachers();
   }, []);
 
@@ -41,8 +61,20 @@ const ViewStudyMaterial = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-8">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="h-screen flex flex-col">
+      <div className="sticky top-0 left-0 right-0 z-20">
+        <Header user="Student" />
+      </div>
+
+      <div className="flex flex-1 h-[calc(100vh-60px)] w-full overflow-hidden">
+        <div
+          className={`h-full bg-blue-800 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-16"
+            }`}
+        >
+          <StudentSidebar userName={student?.name} rollNo={student?.rollno} />
+        </div>
+      </div>
+      <div className=" bg-gray-100 ml-64 p-8 h-full overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">

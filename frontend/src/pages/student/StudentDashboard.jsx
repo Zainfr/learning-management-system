@@ -88,10 +88,10 @@ const StudentDashboard = () => {
         </div>
 
         <div className="flex-1 bg-gray-50 p-8 overflow-auto">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-4 gap-6">
+          <div className="max-w-7xl">
+            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6">
               {/* Profile Card - Spans 2 columns */}
-              <div className="md:col-span-2 md:row-span-3 bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="md:col-span-2 md:row-span-2 bg-white h-fit rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
                 <div className="flex flex-col items-center space-y-6 mt-8">
                   <div className="relative">
                     <img
@@ -148,7 +148,7 @@ const StudentDashboard = () => {
               </div>
 
               {/* Subjects List */}
-              <div className="md:col-span-2 md:row-span-3 bg-white rounded-2xl p-6 shadow-lg">
+              <div className="md:col-span-2 md:row-span-3 h-fit bg-white rounded-2xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
                   Enrolled Subjects
                 </h3>
@@ -172,7 +172,7 @@ const StudentDashboard = () => {
                 </div>
               </div>
               {/* Contact Details Card */}
-              <div className="md:col-span-2 md:row-span-1 bg-white rounded-2xl p-6 shadow-lg">
+              <div className="md:col-span-2 md:row-span-1 h-fit bg-white rounded-2xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
                   Contact Information
                 </h3>
