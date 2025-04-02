@@ -46,6 +46,12 @@ const studentSchema = new mongoose.Schema({
         unique: false,
     },
     experiments: [experimentSchema],
+    batch: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Batch",
+        required: false,
+        unique: false,
+    },
     email: {
         type: String,
         lowercase: true,

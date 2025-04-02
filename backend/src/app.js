@@ -10,7 +10,7 @@ import path from 'path';
 import authRoute from "./routes/authRoute.js";
 import { Subject } from "./models/subjects.model.js";
 import driveRoute from "./routes/driveRoute.js";
-
+import lmsRoute from "./routes/lmsRoute.js";
 const app = express();
 
 // CORS middleware
@@ -35,6 +35,7 @@ app.use('/', userRoute);
 app.use('/api/assignments', assignmentRoutes); // Add assignment routes
 app.use('/api/auth', authRoute);
 app.use('/api/drive', driveRoute);
+app.use('/api/lms', lmsRoute);
 
 
 // to get the Teacher id for frontend.
