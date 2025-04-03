@@ -1,6 +1,10 @@
 import mongoose,{Schema} from "mongoose";
 
 const attendanceSchema = new Schema({
+    attendance_name : {
+        type : String,
+        required : true,
+    },
     lecture : {
         type : Schema.Types.ObjectId,
         ref : "Lecture",
@@ -19,6 +23,11 @@ const attendanceSchema = new Schema({
     markedby : {
         type : Schema.Types.ObjectId,
         ref : "Teacher",
+        required : true,
+    },
+    date :{
+        type : Date,
+        default : Date.now,
         required : true,
     }
 },{ timestamps: true });
