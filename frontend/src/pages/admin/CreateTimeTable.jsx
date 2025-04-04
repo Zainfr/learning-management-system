@@ -4,9 +4,13 @@ import SideBar from '../../components/SideBar'
 
 const CreateTimeTable = () => {
     const [subjects, setSubjects] = useState([]);
-    const [batches, setBatches] = useState([1, 2, 3]);
+    const [batches, setBatches] = useState([]);
     const [teachers, setTeachers] = useState([]);
+    const [semesters, setSemesters] = useState([]);
+    const [error, setError] = useState(null);
+
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const department = "CO";
 
     const timeSlots = [
         "9:15 AM-10:15 AM", "10:15 AM-11:15 AM", "11:15 AM-12:15 PM",
@@ -29,6 +33,23 @@ const CreateTimeTable = () => {
             console.error("Error fetching teachers", error);
         }
     };
+    const fetchSemesters = async () => {
+        try {
+            const semestersResponse = await fetch(
+                "http://localhost:3001/api/semesters"
+            );
+
+            const semestersData = await semestersResponse.json();
+            if (Array.isArray(semestersData)) {
+                setSemesters(semestersData);
+                console.log(semestersData);
+            } else {
+                throw new Error("Unexpected response format");
+            }
+        } catch (error) {
+            console.error("Error fetching Semesters", error);
+        }
+    };
     const fetchSubjects = async () => {
         try {
             const response = await fetch("http://localhost:3001/api/subjects");
@@ -48,10 +69,33 @@ const CreateTimeTable = () => {
             setError("Failed to fetch Subjects. Please try again later.");
         }
     };
+
+    const fetchBatches = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/lms/get-batches/${department}/${semesters[0]?._id}`);
+            if (!response.ok) {
+                console.error(error);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                setBatches(data);
+            } else {
+                throw new Error("Unexpected response format");
+            }
+        }
+        catch (error) {
+            console.error("Error fetching Batches:", error);
+            setError("Failed to fetch Batches. Please try again later.");
+        }
+    };
+
     useEffect(() => {
+        fetchSemesters();
         fetchTeachers();
         fetchSubjects();
-        // fetchBatches();
+        fetchBatches();
     }, []);
 
     const handleSlotClick = (day, time) => {
@@ -61,27 +105,28 @@ const CreateTimeTable = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const date = e.target.date.value; // e.g. "2025-04-02"
+        const date = e.target.date.value; // e.g. "2025-04-04"
         const startTimeRaw = selectedSlot.time.split('-')[0].trim(); // e.g. "9:15 AM"
 
-        // Convert time to 24-hour format
         const [time, modifier] = startTimeRaw.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
 
         if (modifier === 'PM' && hours !== 12) hours += 12;
         if (modifier === 'AM' && hours === 12) hours = 0;
 
-        // Combine into ISO string
-        const isoDateTimeString = new Date(`${date}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00Z`);
+        // Manually create a UTC Date based on IST
+        const istDate = new Date(date);
+        istDate.setUTCHours(hours - 5); // IST is UTC+5:30
+        istDate.setUTCMinutes(minutes - 30);
+        istDate.setUTCSeconds(0);
+        istDate.setUTCMilliseconds(0);
 
         const formData = {
             lecture_name: e.target.subject.value,
             lecture_type: e.target.type.value,
             batch: e.target.batch.value,
-            datetime: isoDateTimeString.toISOString(), // e.g. "2025-04-02T09:15:00.000Z"
+            datetime: istDate.toISOString(), // Correct UTC time representing 9:15 IST
             teacher: e.target.teacher.value,
-            // day: selectedSlot.day,
-            // time: selectedSlot.time
         };
 
         try {
@@ -109,6 +154,7 @@ const CreateTimeTable = () => {
             alert('Failed to create lecture');
         }
     };
+
 
 
     return (
@@ -161,7 +207,7 @@ const CreateTimeTable = () => {
                                 <label className="block text-gray-700 mb-2">Subject</label>
                                 <select name="subject" className="border p-2 w-full rounded" required>
                                     {subjects.map(subject => (
-                                        <option key={subject.id} value={subject.id}>
+                                        <option key={subject._id} value={subject.id}>
                                             {subject.code}
                                         </option>
                                     ))}
@@ -171,7 +217,7 @@ const CreateTimeTable = () => {
                                 <label className="block text-gray-700 mb-2">Teacher</label>
                                 <select name="teacher" className="border p-2 w-full rounded" required>
                                     {teachers.map(subject => (
-                                        <option key={subject.id} value={subject._id}>
+                                        <option key={subject._id} value={subject._id}>
                                             {subject.teacher_name}
                                         </option>
                                     ))}
@@ -187,9 +233,9 @@ const CreateTimeTable = () => {
                             <div>
                                 <label className="block text-gray-700 mb-2">Batch</label>
                                 <select name="batch" className="border p-2 w-full rounded" required>
-                                    {batches.map((batch, index) => (
-                                        <option key={index} value={batch}>
-                                            {batch}
+                                    {batches.map((batch) => (
+                                        <option key={batch.batchNo} value={batch._id}>
+                                            {batch.batchNo}
                                         </option>
                                     ))}
                                 </select>
