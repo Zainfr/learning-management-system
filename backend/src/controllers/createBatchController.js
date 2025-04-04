@@ -22,6 +22,21 @@ export const createBatch = async (req, res) => {
     }
 }
 
+
+export const getBatches = async(req,res)=>{
+    const { department,semesterId } = req.params;
+    try {
+        const batches = await Batch.find({ department, semesterId });
+        if (!batches || batches.length === 0) {
+            return res.status(404).json({ message: "No batches found" });
+        }
+        res.status(200).json(batches);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+        
+    }
+}
 export const getStudentsInBatch = async (req, res) => {
     try {
         const { batchNo } = req.params;
