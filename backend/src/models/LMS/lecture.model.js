@@ -26,11 +26,11 @@ const lectureSchema = new Schema({
         default : Date.now,
         required : true,
     },
-    batch : {
+    batch : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Batch",
         required : true
-    },
+    }],
     teacher : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Teacher",
