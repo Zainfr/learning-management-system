@@ -4,7 +4,7 @@ import SideBar from '../../components/SideBar'
 
 const CreateTimeTable = () => {
     const [subjects, setSubjects] = useState([]);
-    const [batches, setBatches] = useState([]);
+    const [batches, setBatches] = useState([1, 2, 3]);
     const [teachers, setTeachers] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
 
@@ -18,10 +18,39 @@ const CreateTimeTable = () => {
 
     const [timeTable, setTimeTable] = useState({});
 
-    // Fetch subjects and batches from backend
+    // Fetch subjects, teachers and batches from backend
+    const fetchTeachers = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/teachers`);
+            const data = await response.json();
+            setTeachers(data);
+            console.log(data);
+        } catch (error) {
+            console.error("Error fetching teachers", error);
+        }
+    };
+    const fetchSubjects = async () => {
+        try {
+            const response = await fetch("http://localhost:3001/api/subjects");
+            if (!response.ok) {
+                console.error(error);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                setSubjects(data);
+            } else {
+                throw new Error("Unexpected response format");
+            }
+        } catch (error) {
+            console.error("Error fetching Subjects:", error);
+            setError("Failed to fetch Subjects. Please try again later.");
+        }
+    };
     useEffect(() => {
-        // Add your API calls here
-        // fetchSubjects();
+        fetchTeachers();
+        fetchSubjects();
         // fetchBatches();
     }, []);
 
@@ -29,30 +58,58 @@ const CreateTimeTable = () => {
         setSelectedSlot({ day, time });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const date = e.target.date.value; // e.g. "2025-04-02"
+        const startTimeRaw = selectedSlot.time.split('-')[0].trim(); // e.g. "9:15 AM"
+
+        // Convert time to 24-hour format
+        const [time, modifier] = startTimeRaw.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (modifier === 'PM' && hours !== 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+
+        // Combine into ISO string
+        const isoDateTimeString = new Date(`${date}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00Z`);
+
         const formData = {
-            subject: e.target.subject.value,
-            type: e.target.type.value,
+            lecture_name: e.target.subject.value,
+            lecture_type: e.target.type.value,
             batch: e.target.batch.value,
-            date: e.target.date.value,
+            datetime: isoDateTimeString.toISOString(), // e.g. "2025-04-02T09:15:00.000Z"
             teacher: e.target.teacher.value,
-            day: selectedSlot.day,
-            time: selectedSlot.time
+            // day: selectedSlot.day,
+            // time: selectedSlot.time
         };
 
-        // If lab is selected, check if next slot is available
-        if (formData.type === 'Lab') {
-            // Add validation for 2-hour slot availability
+        try {
+            const response = await fetch('http://localhost:3001/api/lms/create-lecture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setTimeTable(prev => ({
+                    ...prev,
+                    [`${selectedSlot.day}-${selectedSlot.time}`]: formData
+                }));
+                alert('Lecture created successfully');
+            } else {
+                alert(data.message || 'Error creating lecture');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to create lecture');
         }
-
-        setTimeTable(prev => ({
-            ...prev,
-            [`${selectedSlot.day}-${selectedSlot.time}`]: formData
-        }));
-
-        // Add API call to save to backend
     };
+
 
     return (
         <div className="flex">
@@ -105,7 +162,7 @@ const CreateTimeTable = () => {
                                 <select name="subject" className="border p-2 w-full rounded" required>
                                     {subjects.map(subject => (
                                         <option key={subject.id} value={subject.id}>
-                                            {subject.name}
+                                            {subject.code}
                                         </option>
                                     ))}
                                 </select>
@@ -114,8 +171,8 @@ const CreateTimeTable = () => {
                                 <label className="block text-gray-700 mb-2">Teacher</label>
                                 <select name="teacher" className="border p-2 w-full rounded" required>
                                     {teachers.map(subject => (
-                                        <option key={subject.id} value={subject.id}>
-                                            {subject.name}
+                                        <option key={subject.id} value={subject._id}>
+                                            {subject.teacher_name}
                                         </option>
                                     ))}
                                 </select>
@@ -130,9 +187,9 @@ const CreateTimeTable = () => {
                             <div>
                                 <label className="block text-gray-700 mb-2">Batch</label>
                                 <select name="batch" className="border p-2 w-full rounded" required>
-                                    {batches.map(batch => (
-                                        <option key={batch.id} value={batch.id}>
-                                            {batch.name}
+                                    {batches.map((batch, index) => (
+                                        <option key={index} value={batch}>
+                                            {batch}
                                         </option>
                                     ))}
                                 </select>
