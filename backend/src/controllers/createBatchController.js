@@ -1,4 +1,4 @@
-import { Batch } from "../models/batch.model.js";
+import { Batch } from "../models/LMS/batch.model.js";
 import { Student } from "../models/student.model.js";
 
 export const createBatch = async (req, res) => {

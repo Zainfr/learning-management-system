@@ -2,7 +2,7 @@ import csvtojson from 'csvtojson';
 import { Student } from '../models/student.model.js';
 import { Semester } from '../models/sem.model.js';
 import { Teacher } from '../models/teacher.models.js';
-import { Batch } from '../models/batch.model.js'; // Import Batch model
+import { Batch } from '../models/LMS/batch.model.js'; // Import Batch model
 import { createStudentFolders } from './folderController.js';
 import { assignMenteesToTeacher } from '../middlewares/assignMentee.js';
 import bcrypt from 'bcrypt';
