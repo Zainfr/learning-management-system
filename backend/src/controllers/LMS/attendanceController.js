@@ -54,7 +54,7 @@ export const getLectures = async (req, res) => {
     takes absentRollnos to mark them absent and marks remaining other students as present automatically.
 */
 export const markAttendance = async (req, res) => {
-    const { attendance_name, batchId, lectureId, absentRollnos, markedBy } = req.body;
+    const { attendance_name, batchId, lectureId, absentRollnos,subjectId, markedBy } = req.body;
 
     try {
         const doesLectureExists = await Lecture.findById(lectureId);
@@ -82,6 +82,7 @@ export const markAttendance = async (req, res) => {
                 attendance_name,
                 lecture: lectureId,
                 student: student._id,
+                subject:subjectId,
                 status: isAbsent ? 'Absent' : 'Present',
                 markedby: markedBy,
             }
@@ -149,5 +150,70 @@ export const getAttendanceStatistic = async (req,res)=> {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+}
+
+// Api to get the overall and subject wise attendance
+export const getSubjectAttendance = async(req,res) => {
+    const {studentId} = req.params;
+    if(!studentId){
+        return res.status(400).json({success: false, message: "StudentId not found"});
+    }
+
+    try {
+        const subjectAttendance = await Attendance.find({student: studentId})
+            .populate("subject", "name");
+
+        if(!subjectAttendance || subjectAttendance.length === 0)
+            return res.status(404).json({success: false, message: "No attendance found for this student"});
+
+        // Calculate overall attendance first
+        const totalLectures = subjectAttendance.length;
+        const totalPresent = subjectAttendance.filter(record => record.status === "Present").length;
+        const overallPercentage = totalLectures > 0 ? 
+            (totalPresent / totalLectures * 100).toFixed(2) + "%" : "0.00%";
+
+        const subjectMap = {};
+
+        subjectAttendance.forEach(record => {
+            if(record.subject){
+                const subjectId = record.subject._id.toString();
+
+                if(!subjectMap[subjectId]){
+                    subjectMap[subjectId] = {
+                        _id: subjectId,
+                        subjectName: record.subject.name,
+                        totalLectures: 0,
+                        presentCount: 0,
+                    };
+                }
+                subjectMap[subjectId].totalLectures += 1;
+                if(record.status === "Present"){
+                    subjectMap[subjectId].presentCount += 1;
+                }
+            }
+        });
+
+        const subjectwiseAttendance = Object.values(subjectMap).map(subject => {
+            const percentage = subject.totalLectures > 0 ? 
+                (subject.presentCount / subject.totalLectures * 100).toFixed(2) + "%" : "0.00%";
+                
+            return {
+                ...subject,
+                attendancePercentage: percentage
+            };
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Subject-wise attendance fetched successfully",
+            data: {
+                overallAttendance: overallPercentage,
+                subjectAttendance: subjectwiseAttendance
+            }
+        });
+    } catch (error) {
+        console.error(error); // Add this to see the actual error
+        return res.status(500).json({success: false, message: "There was an error fetching Subject wise attendance"});
     }
 }
