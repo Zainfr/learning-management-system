@@ -1,10 +1,10 @@
 import mongoose,{Schema} from "mongoose";
 
 const attendanceSchema = new Schema({
-    attendance_name : {
-        type : String,
-        required : true,
-    },
+    // attendance_name : {
+    //     type : String,
+    //     required : true,
+    // },
     lecture : {
         type : Schema.Types.ObjectId,
         ref : "Lecture",
