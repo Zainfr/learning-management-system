@@ -11,7 +11,7 @@ router.get('/get-students/:batchNo', getStudentsInBatch);
 
 //Lecture Routes
 router.post('/create-lecture',createLecture);
-router.get('/get-lectures/:batchId', getLectures);
+router.get('/get-lectures', getLectures);
 
 //Attendance Routes
 router.post('/mark-attendance',markAttendance);

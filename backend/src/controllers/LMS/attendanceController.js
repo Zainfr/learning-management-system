@@ -35,17 +35,26 @@ export const createLecture = async (req, res) => {
 }
 
 export const getLectures = async (req, res) => {
-    const {batchId} = req.params;
     try {
-        const lectures = await Lecture.find({batch:batchId});
+        // Fetch all lectures without any filter
+        const lectures = await Lecture.find()
+            .populate('teacher', 'teacher_name')
+            .populate('batch', 'batchNo')
+            .sort({ date: -1 }); // Sort by date, newest first
+            
         if (!lectures || lectures.length === 0) {
             return res.status(404).json({ success: false, message: "No lectures found" });
         }
-        return res.status(200).json({ success: true, message: "Lectures found", lectures });
+        
+        return res.status(200).json({ 
+            success: true, 
+            message: "Lectures found", 
+            count: lectures.length,
+            lectures 
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: "Internal Server Error" });
-        
     }
 }
 /*
