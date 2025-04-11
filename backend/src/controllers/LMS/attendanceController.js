@@ -49,9 +49,7 @@ export const getLectures = async (req, res) => {
     }
 }
 /*
-    this function is used to mark the attendance of all the students in the batch for a particular lecture
-    takes batchId, lectureId, absentRollnos (multiple roll nos) and teacherId (markedBy) in request body.
-    takes absentRollnos to mark them absent and marks remaining other students as present automatically.
+    just pass lec id and mark attendance for all the studdents in that batch
 */
 export const markAttendance = async (req, res) => {
     const { lectureId, absentRollnos, subjectId, markedBy } = req.body;
