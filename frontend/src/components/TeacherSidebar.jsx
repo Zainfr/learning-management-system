@@ -7,6 +7,7 @@ import {
   FaChalkboardTeacher,
   FaFileUpload,
 } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 
 const TeacherSidebar = ({ userName, rollNo }) => {
   const location = useLocation();
@@ -23,17 +24,15 @@ const TeacherSidebar = ({ userName, rollNo }) => {
             <li>
               <Link
                 to={`/teacher/${id}`}
-                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${
-                  isActive(`/teacher/${id}`)
-                    ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
-                    : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
-                }`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${isActive(`/teacher/${id}`)
+                  ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                  : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                  }`}
               >
                 <FaUser
                   size={20}
-                  className={`transition-colors duration-300 ${
-                    isActive(`/teacher/${id}`) ? "text-blue-600" : ""
-                  }`}
+                  className={`transition-colors duration-300 ${isActive(`/teacher/${id}`) ? "text-blue-600" : ""
+                    }`}
                 />
                 <span className="pl-4 font-medium">Profile</span>
               </Link>
@@ -41,17 +40,15 @@ const TeacherSidebar = ({ userName, rollNo }) => {
             <li>
               <Link
                 to={`/teacher/${id}/assignment`}
-                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${
-                  isActive(`/teacher/${id}/assignment`)
-                    ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
-                    : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
-                }`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${isActive(`/teacher/${id}/assignment`)
+                  ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                  : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                  }`}
               >
                 <FaBook
                   size={20}
-                  className={`transition-colors duration-300 ${
-                    isActive(`/teacher/${id}/assignment`) ? "text-blue-600" : ""
-                  }`}
+                  className={`transition-colors duration-300 ${isActive(`/teacher/${id}/assignment`) ? "text-blue-600" : ""
+                    }`}
                 />
                 <span className="pl-4 font-medium">Create Assignment</span>
               </Link>
@@ -59,19 +56,17 @@ const TeacherSidebar = ({ userName, rollNo }) => {
             <li>
               <Link
                 to={`/teacher/${id}/assignments`}
-                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${
-                  isActive(`/teacher/${id}/assignments`)
-                    ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
-                    : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
-                }`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${isActive(`/teacher/${id}/assignments`)
+                  ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                  : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                  }`}
               >
                 <FaUserGraduate
                   size={20}
-                  className={`transition-colors duration-300 ${
-                    isActive(`/teacher/${id}/assignments`)
-                      ? "text-blue-600"
-                      : ""
-                  }`}
+                  className={`transition-colors duration-300 ${isActive(`/teacher/${id}/assignments`)
+                    ? "text-blue-600"
+                    : ""
+                    }`}
                 />
                 <span className="pl-4 font-medium">Submissions</span>
               </Link>
@@ -79,19 +74,17 @@ const TeacherSidebar = ({ userName, rollNo }) => {
             <li>
               <Link
                 to={`/teacher/${id}/experiments`}
-                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${
-                  isActive(`/teacher/${id}/experiments`)
-                    ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
-                    : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
-                }`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${isActive(`/teacher/${id}/experiments`)
+                  ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                  : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                  }`}
               >
                 <FaChalkboardTeacher
                   size={20}
-                  className={`transition-colors duration-300 ${
-                    isActive(`/teacher/${id}/experiments`)
-                      ? "text-blue-600"
-                      : ""
-                  }`}
+                  className={`transition-colors duration-300 ${isActive(`/teacher/${id}/experiments`)
+                    ? "text-blue-600"
+                    : ""
+                    }`}
                 />
                 <span className="pl-4 font-medium">Experiments</span>
               </Link>
@@ -99,21 +92,37 @@ const TeacherSidebar = ({ userName, rollNo }) => {
             <li>
               <Link
                 to={`/teacher/${id}/upload/studyMaterial`}
-                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${
-                  isActive(`/teacher/${id}/upload/studyMaterial`)
-                    ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
-                    : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
-                }`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${isActive(`/teacher/${id}/upload/studyMaterial`)
+                  ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                  : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                  }`}
               >
                 <FaFileUpload
                   size={20}
-                  className={`transition-colors duration-300 ${
-                    isActive(`/teacher/${id}/upload/studyMaterial`)
-                      ? "text-blue-600"
-                      : ""
-                  }`}
+                  className={`transition-colors duration-300 ${isActive(`/teacher/${id}/upload/studyMaterial`)
+                    ? "text-blue-600"
+                    : ""
+                    }`}
                 />
                 <span className="pl-4 font-medium">Upload Material</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`/teacher/${id}/attendance`}
+                className={`flex items-center text-lg p-3 rounded-xl transition-all duration-300 ease-in-out ${isActive(`/teacher/${id}/attendance`)
+                  ? "bg-gradient-to-r from-white to-blue-50 text-blue-900 shadow-lg shadow-blue-500/20 font-medium scale-105 -translate-y-0.5"
+                  : "text-gray-100 hover:bg-white/10 hover:shadow-md hover:scale-102 hover:-translate-y-0.5"
+                  }`}
+              >
+                <MdDashboard
+                  size={20}
+                  className={`transition-colors duration-300 ${isActive(`/teacher/${id}/attendance`)
+                    ? "text-blue-600"
+                    : ""
+                    }`}
+                />
+                <span className="pl-4 font-medium">Mark Attendance</span>
               </Link>
             </li>
           </ul>
