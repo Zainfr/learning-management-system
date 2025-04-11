@@ -8,6 +8,7 @@ import ViewDocument from "../../components/ViewDocument";
 import ViewExp from "./ViewExp";
 import AllExp from "./AllExp";
 import UploadStudyMaterial from "./UploadStudyMaterial";
+import Attendance from "./Attendance";
 
 const Teacher = () => {
   return (
@@ -21,6 +22,7 @@ const Teacher = () => {
       <Route path="experiment/:rollno" element={<AllExp />} />
       <Route path="experiments" element={<ViewExp />} />
       <Route path="assignment" element={<CreateAssignment />} />
+      <Route path="attendance" element={<Attendance />} />
       <Route path="upload/studyMaterial" element={<UploadStudyMaterial />} />
     </Routes>
   );
