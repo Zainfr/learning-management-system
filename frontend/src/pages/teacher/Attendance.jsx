@@ -56,7 +56,7 @@ const Attendance = () => {
             }
         } catch (error) {
             console.error("Error fetching lectures:", error);
-            setError("Failed to fetch lectures. Please try again later.");
+            console.error("Failed to fetch lectures. Please try again later.");
         }
     };
 
@@ -67,15 +67,19 @@ const Attendance = () => {
             const data = await response.json();
 
             if (Array.isArray(data)) {
-                setBatches(data.map(batch => ({
+                const formattedBatches = data.map(batch => ({
                     value: batch._id,
                     label: `Batch ${batch.batchNo}`
-                })));
+                }));
+                setBatches(formattedBatches);
+
+                if (formattedBatches.length > 0) {
+                    setSelectedBatch(formattedBatches[0]);
+                }
             }
-            setSelectedBatch(data[0]);
         } catch (error) {
             console.error("Error fetching batches:", error);
-            setError("Failed to fetch batches. Please try again later.");
+            console.error("Failed to fetch batches. Please try again later.");
         }
     };
 
@@ -109,17 +113,18 @@ const Attendance = () => {
         fetchData();
         fetchSemesters();
     }, [id]);
+
     useEffect(() => {
         if (selectedSemester) {
             fetchBatches(selectedSemester);
-            console.log("Selected Semester:", selectedSemester);
-            console.log("Selected Batch:", batchs);
-        }
-        if (selectedBatch) {
-            fetchLectures(selectedBatch.value);
-            console.log("Selected Lecture:", lecture);
         }
     }, [selectedSemester]);
+
+    useEffect(() => {
+        if (selectedBatch && selectedBatch.value) {
+            fetchLectures(selectedBatch.value);
+        }
+    }, [selectedBatch]);
 
     useEffect(() => {
         // Filter students based on search query
@@ -131,11 +136,17 @@ const Attendance = () => {
     }, [searchQuery, students]);
 
     const toggleAbsent = (rollNo) => {
-        setAbsentStudents((prev) =>
-            prev.includes(rollNo)
-                ? prev.filter((absentRollNo) => absentRollNo !== rollNo)
-                : [...prev, rollNo]
-        );
+        setAbsentStudents(prev => {
+            const isCurrentlyAbsent = prev.includes(rollNo);
+
+            if (isCurrentlyAbsent) {
+                // Remove this student from absent list
+                return prev.filter(absentRollNo => absentRollNo !== rollNo);
+            } else {
+                // Add this student to absent list
+                return [...prev, rollNo];
+            }
+        });
     };
 
     const markAllPresent = () => {
@@ -143,7 +154,8 @@ const Attendance = () => {
     };
 
     const markAllAbsent = () => {
-        setAbsentStudents(students.map(student => student.rollNo));
+        const allRollNumbers = students.map(student => student.rollNo);
+        setAbsentStudents(allRollNumbers);
     };
 
     const handleSubmit = () => {
@@ -160,7 +172,7 @@ const Attendance = () => {
             //     teacherId: id,
             //     date: new Date().toISOString(),
             //     absentStudents,
-            //     batchId: selectedBatch.id
+            //     batchId: selectedBatch.value
             //   })
             // });
 
@@ -241,15 +253,17 @@ const Attendance = () => {
                                         <div className="relative">
                                             <select
                                                 className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-lg"
-                                                value={selectedBatch?.label || ""} // Use optional chaining and provide a fallback value
-                                                onChange={(e) =>
-                                                    setSelectedBatch(
-                                                        batchs.find(batch => batch.label === parseInt(e.target.value))
-                                                    )
-                                                }
+                                                value={selectedBatch?.label || ""}
+                                                onChange={(e) => {
+                                                    const selectedLabel = e.target.value;
+                                                    const selectedBatchObj = batchs.find(batch => batch.label === selectedLabel);
+                                                    if (selectedBatchObj) {
+                                                        setSelectedBatch(selectedBatchObj);
+                                                    }
+                                                }}
                                             >
                                                 {batchs.map(batch => (
-                                                    <option key={batch.label} value={batch.label}>
+                                                    <option key={batch.value} value={batch.label}>
                                                         {batch.label}
                                                     </option>
                                                 ))}
@@ -336,10 +350,7 @@ const Attendance = () => {
                                                             {student.name}
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-center">
-                                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isAbsent
-                                                                ? 'bg-red-100 text-red-800'
-                                                                : 'bg-green-100 text-green-800'
-                                                                }`}>
+                                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isAbsent ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
                                                                 {isAbsent ? 'Absent' : 'Present'}
                                                             </span>
                                                         </td>
