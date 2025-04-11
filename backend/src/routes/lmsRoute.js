@@ -1,17 +1,22 @@
 import express from 'express';
-import { createBatch, getBatches } from '../controllers/createBatchController.js';
-import { getStudentsInBatch } from '../controllers/createBatchController.js';
-import { createLecture, getAttendanceStatistic, getLectures, markAttendance } from '../controllers/LMS/attendanceController.js';
+import { createBatch, getBatches,getStudentsInBatch } from '../controllers/createBatchController.js';
+import { createLecture, getAttendanceStatistic, getLectures, getSubjectAttendance, markAttendance } from '../controllers/LMS/attendanceController.js';
 
 const router = express.Router();
 
+//Batch routes
 router.post('/create-batch', createBatch);
-router.post('/create-lecture',createLecture);
-router.post('/mark-attendance',markAttendance);
-
-router.get('/get-lectures/:batchId', getLectures);
 router.get('/get-batches/:department/:semester',getBatches);
 router.get('/get-students/:batchNo', getStudentsInBatch);
+
+//Lecture Routes
+router.post('/create-lecture',createLecture);
+router.get('/get-lectures/:batchId', getLectures);
+
+//Attendance Routes
+router.post('/mark-attendance',markAttendance);
 router.get('/attendance-statistics/:lectureId',getAttendanceStatistic);
+router.get('/student-attendance/:studentId',getSubjectAttendance)
+
 
 export default router;
