@@ -2,7 +2,7 @@ import { Attendance } from "../../models/LMS/attendance.model.js";
 import { Batch } from "../../models/LMS/batch.model.js";
 import { Lecture } from "../../models/LMS/lecture.model.js";
 import { Student } from "../../models/student.model.js";
-
+import { Semester } from "../../models/sem.model.js";
 /*
     creates a lecture for a particular batch and teacher.
     takes lecture_name, lecture_type, date, batch and teacher in request body.
@@ -54,35 +54,43 @@ export const getLectures = async (req, res) => {
     takes absentRollnos to mark them absent and marks remaining other students as present automatically.
 */
 export const markAttendance = async (req, res) => {
-    const { attendance_name, batchId, lectureId, absentRollnos,subjectId, markedBy } = req.body;
+    const { lectureId, absentRollnos, subjectId, markedBy } = req.body;
+    // Note: Removed batchId from required parameters
 
     try {
-        const doesLectureExists = await Lecture.findById(lectureId);
-        if (!doesLectureExists) {
+        const lecture = await Lecture.findById(lectureId);
+        if (!lecture) {
             return res.status(400).json({ success: false, message: "Lecture/Lab not found" });
         }
 
-        const batchStudents = await Student.find({ batch: batchId });
-        if (batchStudents.length === 0) {
-            return res.status(404).json({ success: false, message: "No students found in this batch" });
+        // Determine if this is a lecture (all students in semester) or lab (batch specific)
+        let students;
+        if (lecture.lecture_type === "Lecture") {
+            // Get all students in the semester
+            const semester = await Semester.findById(lecture.semester);
+            students = await Student.find({ semester: lecture.semester });
+        } else {
+            // For labs, use the batch from the lecture
+            students = await Student.find({ batch: { $in: lecture.batch } });
         }
-        console.log(batchStudents.length);
+
+        if (students.length === 0) {
+            return res.status(404).json({ success: false, message: "No students found for this lecture" });
+        }
+
         const absentRollnosToUpperCase = absentRollnos.map((rollno) => rollno.toUpperCase());
-
         const attendanceRecord = [];
-
         let presentCount = 0;
         let absentCount = 0;
         const errors = [];
 
-        for (const student of batchStudents) {
+        for (const student of students) {
             const isAbsent = absentRollnosToUpperCase.includes(student.rollno);
 
             const attendanceObj = {
-                attendance_name,
                 lecture: lectureId,
                 student: student._id,
-                subject:subjectId,
+                subject: subjectId,
                 status: isAbsent ? 'Absent' : 'Present',
                 markedby: markedBy,
             }
@@ -100,14 +108,22 @@ export const markAttendance = async (req, res) => {
             await Attendance.insertMany(attendanceRecord, { ordered: false });
         } catch (err) {
             if (err.code === 11000) {
-                errors.push({ message: "Attendance already marked for this student" });
+                errors.push({ message: "Attendance already marked for some students" });
             } else {
                 console.error("Error inserting attendance:", err);
                 errors.push({ message: "Error marking attendance" });
             }
         }
 
-        return res.status(201).json({ success: true, message: "Attendance marked successfully" });
+        return res.status(201).json({ 
+            success: true, 
+            message: "Attendance marked successfully",
+            stats: {
+                total: students.length,
+                present: presentCount,
+                absent: absentCount
+            }
+        });
 
     } catch (error) {
         console.log(error);
