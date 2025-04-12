@@ -12,7 +12,7 @@ const Attendance = () => {
     const [absentStudents, setAbsentStudents] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
-    const [lecture, setLecture] = useState({});
+    const [lectures, setLectures] = useState([]);
     const [semesters, setSemesters] = useState([]);
     const department = "CO";
     const [batchs, setBatches] = useState([]);
@@ -22,6 +22,7 @@ const Attendance = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [selectedSemester, setSelectedSemester] = useState(null);
+    const [selectedLecture, setSelectedLecture] = useState(null);
     const [selectedBatch, setSelectedBatch] = useState(null);
 
     const fetchSemesters = async () => {
@@ -41,22 +42,6 @@ const Attendance = () => {
         } catch (error) {
             console.error("Error fetching semesters", error);
             throw error;
-        }
-    };
-
-    const fetchLectures = async (batchId) => {
-        try {
-            const response = await fetch(`http://localhost:3001/api/lms/get-lectures/${batchId}`);
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            const data = await response.json();
-            if (Array.isArray(data) && data.length > 0) {
-                setLecture(data[0]);
-            } else {
-                setLecture({});
-            }
-        } catch (error) {
-            console.error("Error fetching lectures:", error);
-            console.error("Failed to fetch lectures. Please try again later.");
         }
     };
 
@@ -80,6 +65,28 @@ const Attendance = () => {
         } catch (error) {
             console.error("Error fetching batches:", error);
             console.error("Failed to fetch batches. Please try again later.");
+        }
+    };
+
+    const fetchLeactures = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/lms/get-lectures`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const data = await response.json();
+            console.log(data);
+            if (data && data.lectures) {
+                const formattedLectures = data.lectures.map(lecture => ({
+                    value: lecture._id,
+                    label: `${lecture.lecture_name} (${lecture.lecture_type})`,
+                }));
+                setLectures(formattedLectures);
+                if (formattedLectures.length > 0) {
+                    setSelectedLecture(formattedLectures[0]);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching lectures:", error);
+            console.error("Failed to fetch lectures. Please try again later.");
         }
     };
 
@@ -111,6 +118,7 @@ const Attendance = () => {
         };
 
         fetchData();
+        fetchLeactures();
         fetchSemesters();
     }, [id]);
 
@@ -118,13 +126,9 @@ const Attendance = () => {
         if (selectedSemester) {
             fetchBatches(selectedSemester);
         }
+        console.log(lectures)
     }, [selectedSemester]);
 
-    useEffect(() => {
-        if (selectedBatch && selectedBatch.value) {
-            fetchLectures(selectedBatch.value);
-        }
-    }, [selectedBatch]);
 
     useEffect(() => {
         // Filter students based on search query
@@ -159,32 +163,35 @@ const Attendance = () => {
 
     const confirmSubmit = async () => {
         try {
-            // Here you would normally send the data to your API
-            // const response = await fetch('http://localhost:3001/api/attendance', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({
-            //     teacherId: id,
-            //     date: new Date().toISOString(),
-            //     absentStudents,
-            //     batchId: selectedBatch.value
-            //   })
-            // });
+            const attendanceData = {
+                lectureId: selectedLecture?.value, // ID of the selected lecture
+                absentRollnos: absentStudents, // List of absent students' roll numbers
+                subjectId: selectedLecture?.subjectId, // Subject ID (if available in your lecture object)
+                markedBy: teacher?._id, // ID of the teacher marking attendance
+            };
 
-            // For now, just simulate a successful submission
-            console.log("Absent Students:", absentStudents);
-            console.log("Present Students:", students
-                .filter((student) => !absentStudents.includes(student.rollno))
-                .map((student) => student.rollno));
+            const response = await fetch('http://localhost:3001/api/mark-attendance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(attendanceData),
+            });
 
-            toast.success("Attendance submitted successfully!");
-            setShowConfirmation(false);
+            const result = await response.json();
 
-            // Optional: Navigate to a confirmation page or dashboard
-            // navigate(`/teacher/${id}/dashboard`);
+            if (response.ok) {
+                toast.success(result.message || "Attendance marked successfully!");
+                setShowConfirmation(false);
+
+                // Optional: Reset state or navigate to another page
+                setAbsentStudents([]);
+            } else {
+                toast.error(result.message || "Failed to mark attendance. Please try again.");
+            }
         } catch (error) {
             console.error("Error submitting attendance:", error);
-            toast.error("Failed to submit attendance. Please try again.");
+            toast.error("An error occurred while submitting attendance. Please try again.");
         }
     };
 
@@ -244,20 +251,20 @@ const Attendance = () => {
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-40">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Batch</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Select Lecture</label>
                                         <div className="relative">
                                             <select
                                                 className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-lg"
-                                                value={selectedBatch?.label || ""}
+                                                value={selectedLecture?.label || ""}
                                                 onChange={(e) => {
                                                     const selectedLabel = e.target.value;
-                                                    const selectedBatchObj = batchs.find(batch => batch.label === selectedLabel);
-                                                    if (selectedBatchObj) {
-                                                        setSelectedBatch(selectedBatchObj);
+                                                    const SelectedLectureObj = lectures.find(batch => batch.label === selectedLabel);
+                                                    if (SelectedLectureObj) {
+                                                        setSelectedLecture(SelectedLectureObj);
                                                     }
                                                 }}
                                             >
-                                                {batchs.map(batch => (
+                                                {lectures.map(batch => (
                                                     <option key={batch.value} value={batch.label}>
                                                         {batch.label}
                                                     </option>
