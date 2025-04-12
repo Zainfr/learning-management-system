@@ -284,7 +284,7 @@ const CreateTimeTable = () => {
                                                         <div className="flex flex-col">
                                                             <span className="font-medium">{slotData.subject}</span>
                                                             <span className="text-xs text-gray-500">
-                                                                {slotData.lecture_type}
+                                                                {slotData.lecture_name}
                                                             </span>
                                                         </div>
                                                     ) : (

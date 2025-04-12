@@ -24,6 +24,8 @@ const Attendance = () => {
     const [selectedSemester, setSelectedSemester] = useState(null);
     const [selectedLecture, setSelectedLecture] = useState(null);
     const [selectedBatch, setSelectedBatch] = useState(null);
+    const [selectedSubjectID, setSelectedSubjectID] = useState(null);
+    const [subjects, setSubjects] = useState([]);
 
     const fetchSemesters = async () => {
         try {
@@ -107,6 +109,7 @@ const Attendance = () => {
                 const studentsData = await studentsResponse.json();
 
                 setTeacher(teacherData.teacher);
+                setSubjects(teacherData?.teacher?.subjects);
                 setStudents(studentsData.students);
                 setFilteredStudents(studentsData.students);
             } catch (error) {
@@ -126,7 +129,7 @@ const Attendance = () => {
         if (selectedSemester) {
             fetchBatches(selectedSemester);
         }
-        console.log(lectures)
+        console.log(selectedSubjectID)
     }, [selectedSemester]);
 
 
@@ -166,7 +169,7 @@ const Attendance = () => {
             const attendanceData = {
                 lectureId: selectedLecture?.value, // ID of the selected lecture
                 absentRollnos: absentStudents, // List of absent students' roll numbers
-                subjectId: selectedLecture?.subjectId, // Subject ID (if available in your lecture object)
+                subjectId: selectedSubjectID,
                 markedBy: teacher?._id, // ID of the teacher marking attendance
             };
 
@@ -249,10 +252,9 @@ const Attendance = () => {
                         {/* Controls & Filters */}
                         <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-40">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Select Lecture</label>
-                                        <div className="relative">
+                                <div className="flex flex-col md:flex-row items-center space-x-4">
+                                    <div className="flex flex-col md:flex-row">
+                                        <div className="relative w-40 mr-8">
                                             <select
                                                 className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-lg"
                                                 value={selectedLecture?.label || ""}
@@ -267,6 +269,25 @@ const Attendance = () => {
                                                 {lectures.map(batch => (
                                                     <option key={batch.value} value={batch.label}>
                                                         {batch.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                                <ChevronDown size={16} className="text-gray-400" />
+                                            </div>
+                                        </div>
+                                        <div className="relative w-40">
+                                            <select
+                                                className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-lg"
+                                                value={selectedSubjectID || ""}
+                                                onChange={(e) => {
+                                                    const selectedId = e.target.value;
+                                                    setSelectedSubjectID(selectedId);
+                                                }}
+                                            >
+                                                {subjects.map(batch => (
+                                                    <option key={batch.name} value={batch._id}>
+                                                        {batch.name}
                                                     </option>
                                                 ))}
                                             </select>
