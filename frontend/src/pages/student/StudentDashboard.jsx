@@ -3,7 +3,8 @@ import Header from "../../components/Header";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StudentSidebar from "../../components/StudentSidebar";
-import { BookOpen, GraduationCap, BookCheck } from "lucide-react";
+import { BookOpen, GraduationCap, BookCheck, Users } from "lucide-react";
+import AttendanceStats from "../../components/AttendanceStats"; // Import the new component
 
 const StudentDashboard = () => {
   const profileImageURLS = [
@@ -18,6 +19,7 @@ const StudentDashboard = () => {
   ];
   const [student, setStudent] = useState({});
   const [experiment, setExperiment] = useState([]);
+  const [stats, setStats] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -39,9 +41,9 @@ const StudentDashboard = () => {
     setIsVisible(true);
   };
 
-  const fetchExperiments = async () => {
+  const fetchExperiments = async (rollno) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/drive/experiments/${student?.rollno}`);
+      const response = await fetch(`http://localhost:3001/api/drive/experiments/${rollno}`);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -51,6 +53,20 @@ const StudentDashboard = () => {
     } catch (error) {
       console.error("Error fetching Experiments:", error);
       setError("Error fetching Experiments");
+    }
+  }
+  const fetchAttendanceStatistics = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/lms/student-attendance/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setStats(data.data);
+      console.log("Fetched attendance data:", data.data); // Debug log
+    } catch (error) {
+      console.error("Error fetching Attendance:", error);
+      setError("Error fetching Attendance");
     }
   }
 
@@ -70,8 +86,15 @@ const StudentDashboard = () => {
     };
 
     fetchStudent();
-    fetchExperiments();
+    fetchAttendanceStatistics();
   }, []);
+
+  useEffect(() => {
+    if (student?.rollno) {
+      fetchExperiments(student.rollno);
+    }
+  }, [student?.rollno]);
+
 
   return (
     <div className="h-screen flex flex-col">
@@ -89,9 +112,9 @@ const StudentDashboard = () => {
 
         <div className="flex-1 bg-gray-50 p-8 overflow-auto">
           <div className="max-w-7xl">
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Profile Card - Spans 2 columns */}
-              <div className="md:col-span-2 md:row-span-2 bg-white h-fit rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="md:col-span-2 bg-white h-fit rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
                 <div className="flex flex-col items-center space-y-6 mt-8">
                   <div className="relative">
                     <img
@@ -126,34 +149,37 @@ const StudentDashboard = () => {
                 </div>
               </div>
 
-              {/* Quick Stats Cards */}
-              <div className="md:col-span-1 md:row-span-1 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
+              {/* Quick Stats Cards
+              <div className="md:col-span-1 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
                 <div className="flex items-center space-x-4 mb-4">
                   <BookOpen className="text-2xl" />
                   <h3 className="text-lg font-semibold">Subjects</h3>
                 </div>
                 <p className="text-3xl font-bold">
-                  {student.experiments?.length || 0}
+                  {experiment?.length || 0}
                 </p>
                 <p className="text-blue-100 mt-2">Enrolled Courses</p>
               </div>
 
-              <div className="md:col-span-1 md:row-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+              <div className="md:col-span-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
                 <div className="flex items-center space-x-4 mb-4">
                   <GraduationCap className="text-2xl" />
                   <h3 className="text-lg font-semibold">Semester</h3>
                 </div>
                 <p className="text-3xl font-bold">5</p>
                 <p className="text-purple-100 mt-2">Current Progress</p>
-              </div>
+              </div> */}
+
+              {/* Attendance Stats Component */}
+              <AttendanceStats stats={stats} email={student?.email} phone={student?.mobile} />
 
               {/* Subjects List */}
-              <div className="md:col-span-2 md:row-span-3 h-fit bg-white rounded-2xl p-6 shadow-lg">
+              <div className="md:col-span-2 h-fit bg-white rounded-2xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
                   Enrolled Subjects
                 </h3>
                 <div className="grid grid-cols-1 gap-3">
-                  {student?.experiments?.map((experiment, index) => (
+                  {experiment?.map((experiment, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors duration-200"
@@ -171,26 +197,9 @@ const StudentDashboard = () => {
                   ))}
                 </div>
               </div>
+
               {/* Contact Details Card */}
-              <div className="md:col-span-2 md:row-span-1 h-fit bg-white rounded-2xl p-6 shadow-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Contact Information
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-500">Email Address</p>
-                    <p className="font-medium text-gray-800">
-                      {student?.email}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-500">Phone Number</p>
-                    <p className="font-medium text-gray-800">
-                      {student?.mobile}
-                    </p>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>

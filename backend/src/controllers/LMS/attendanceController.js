@@ -63,6 +63,7 @@ export const getLectures = async (req, res) => {
 export const markAttendance = async (req, res) => {
     const { lectureId, absentRollnos, subjectId, markedBy } = req.body;
     // Note: Removed batchId from required parameters
+    console.log(lectureId, absentRollnos, subjectId, markedBy);
 
     try {
         const lecture = await Lecture.findById(lectureId);

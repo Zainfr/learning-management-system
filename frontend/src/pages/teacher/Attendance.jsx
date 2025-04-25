@@ -132,6 +132,11 @@ const Attendance = () => {
         console.log(selectedSubjectID)
     }, [selectedSemester]);
 
+    useEffect(() => {
+        console.log(selectedSubjectID);
+
+    }, [selectedSubjectID])
+
 
     useEffect(() => {
         // Filter students based on search query
@@ -170,10 +175,12 @@ const Attendance = () => {
                 lectureId: selectedLecture?.value, // ID of the selected lecture
                 absentRollnos: absentStudents, // List of absent students' roll numbers
                 subjectId: selectedSubjectID,
+                status: "Absent",
                 markedBy: teacher?._id, // ID of the teacher marking attendance
             };
+            console.log(attendanceData);
 
-            const response = await fetch('http://localhost:3001/api/mark-attendance', {
+            const response = await fetch('http://localhost:3001/api/lms/mark-attendance', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
